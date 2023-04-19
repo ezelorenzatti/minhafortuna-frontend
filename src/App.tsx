@@ -3,11 +3,11 @@ import { ThemeProvider } from 'styled-components';
 import GlobalStyles from './styles/GlobalStyles';
 
 import Layout from './components/Layout';
-import dark from './styles/themes/default';
+import standard from './styles/themes/standard';
 
 const App: React.FC = () =>{
     return (
-        <ThemeProvider theme={dark} >
+        <ThemeProvider theme={standard} >
             <GlobalStyles/>
             <Layout/>
         </ThemeProvider>

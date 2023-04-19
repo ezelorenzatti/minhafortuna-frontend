@@ -7,11 +7,11 @@ import Content from '../Content';
 import Aside from '../Aside';
 
 const Layout: React.FC = () => {
-  return <Grid>
-        <MainHeader/>
-        <Aside/>
-        <Content/>
-  </Grid>
+  return  <Grid>
+            <MainHeader/>
+            <Aside/>
+            <Content/>
+          </Grid>
   
 }
 

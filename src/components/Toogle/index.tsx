@@ -10,7 +10,7 @@ const Toogle: React.FC = () => (
     <Container>
         <ToogleLabel>Ligh</ToogleLabel>
         <ToogleSelector 
-            checked 
+            checked
             checkedIcon={false}
             uncheckedIcon={false}
             onChange={()=>console.log("Mudou")}></ToogleSelector>

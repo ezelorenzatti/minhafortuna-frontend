@@ -1,8 +1,13 @@
 import React from "react";
 
+import { Container } from "./syles";
+import ContentHeader from "../../components/ContentHeader";
+
 const Dashboard: React.FC = () =>{
     return (
-        <h1>Dashboard</h1>
+        <Container>
+            <ContentHeader></ContentHeader>
+        </Container>
     )
 }
 

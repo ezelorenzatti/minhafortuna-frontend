@@ -5,3 +5,9 @@ export const Container = styled.div`
 
 
 `;
+
+export const Content = styled.div`
+
+
+
+`;

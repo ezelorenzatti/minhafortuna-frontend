@@ -1,7 +1,8 @@
 import React from "react";
-import { Container } from "./syles";
+import { Container, Content } from "./syles";
 import ContentHeader from "../../components/ContentHeader";
 import SelectInput from "../../components/SelectInput";
+import HistoryFinanceCard from "../../components/HistoryFinanceCard";
 
 const List: React.FC = () =>{
 
@@ -13,8 +14,117 @@ const List: React.FC = () =>{
     return (
         <Container>
             <ContentHeader title="Saídas" lineColor="#FFF">
-                <SelectInput options={ops}/>
+                <SelectInput options={ops}/>            
             </ContentHeader>
+
+            <Content>
+                <HistoryFinanceCard 
+                    cardColor="#313862"
+                    tagColor="#e44c4e"
+                    title="Conta de Luz"
+                    subtitle="11/05/2023"
+                    amount="R$ 130,00"
+                />        
+            </Content>
+            <Content>
+                <HistoryFinanceCard 
+                    cardColor="#313862"
+                    tagColor="#e44c4e"
+                    title="Conta de Luz"
+                    subtitle="11/05/2023"
+                    amount="R$ 130,00"
+                />        
+            </Content>
+            <Content>
+                <HistoryFinanceCard 
+                    cardColor="#313862"
+                    tagColor="#e44c4e"
+                    title="Conta de Luz"
+                    subtitle="11/05/2023"
+                    amount="R$ 130,00"
+                />        
+            </Content>
+            <Content>
+                <HistoryFinanceCard 
+                    cardColor="#313862"
+                    tagColor="#e44c4e"
+                    title="Conta de Luz"
+                    subtitle="11/05/2023"
+                    amount="R$ 130,00"
+                />        
+            </Content>
+            <Content>
+                <HistoryFinanceCard 
+                    cardColor="#313862"
+                    tagColor="#e44c4e"
+                    title="Conta de Luz"
+                    subtitle="11/05/2023"
+                    amount="R$ 130,00"
+                />        
+            </Content>
+            <Content>
+                <HistoryFinanceCard 
+                    cardColor="#313862"
+                    tagColor="#e44c4e"
+                    title="Conta de Luz"
+                    subtitle="11/05/2023"
+                    amount="R$ 130,00"
+                />        
+            </Content>
+            <Content>
+                <HistoryFinanceCard 
+                    cardColor="#313862"
+                    tagColor="#e44c4e"
+                    title="Conta de Luz"
+                    subtitle="11/05/2023"
+                    amount="R$ 130,00"
+                />        
+            </Content>
+            <Content>
+                <HistoryFinanceCard 
+                    cardColor="#313862"
+                    tagColor="#e44c4e"
+                    title="Conta de Luz"
+                    subtitle="11/05/2023"
+                    amount="R$ 130,00"
+                />        
+            </Content>
+            <Content>
+                <HistoryFinanceCard 
+                    cardColor="#313862"
+                    tagColor="#e44c4e"
+                    title="Conta de Luz"
+                    subtitle="11/05/2023"
+                    amount="R$ 130,00"
+                />        
+            </Content>
+            <Content>
+                <HistoryFinanceCard 
+                    cardColor="#313862"
+                    tagColor="#e44c4e"
+                    title="Conta de Luz"
+                    subtitle="11/05/2023"
+                    amount="R$ 130,00"
+                />        
+            </Content>
+            <Content>
+                <HistoryFinanceCard 
+                    cardColor="#313862"
+                    tagColor="#e44c4e"
+                    title="Conta de Luz"
+                    subtitle="11/05/2023"
+                    amount="R$ 130,00"
+                />        
+            </Content>
+            <Content>
+                <HistoryFinanceCard 
+                    cardColor="#313862"
+                    tagColor="#e44c4e"
+                    title="Conta de Luz"
+                    subtitle="11/05/2023"
+                    amount="R$ 130,00"
+                />        
+            </Content>
         </Container>
     );
 }

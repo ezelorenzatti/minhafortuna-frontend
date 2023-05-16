@@ -30,14 +30,14 @@ const List: React.FC = () =>{
     const {type : movimentType} = useParams();
 
     const pageData = useMemo(() => {
-        return movimentType === 'entry_balance' ?
+        return movimentType === 'entry-balance' ?
         {
             title:'Entradas',
-            lineColor:'#F7931B',
+            lineColor:'#4E41F0',
             listData: gains
         } : {
-            title:'Entradas',
-            lineColor:'#F7931B',
+            title:'Saídas',
+            lineColor:'#E44c4E',
             listData : expenses
         }
     }, [movimentType]);

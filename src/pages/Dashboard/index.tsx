@@ -1,12 +1,14 @@
 import React, { useMemo, useState } from "react";
 
-import { Container } from "./syles";
+import { Container, Content } from "./syles";
 import ContentHeader from "../../components/ContentHeader";
 import SelectInput from "../../components/SelectInput";
-import listOfMonths from "../../utils/months";
+
 
 import gains from "../../repositories/gains";
 import expenses from "../../repositories/expenses";
+import listOfMonths from "../../utils/months";
+import WalletBox from "../../components/WalletBox";
 
 const Dashboard: React.FC = () =>{
 
@@ -67,6 +69,26 @@ const Dashboard: React.FC = () =>{
                     onChange={(event) => handleYearSelected(event.target.value)}
                     defaultValue={yearSelected}  />   
             </ContentHeader>
+            <Content>
+                <WalletBox 
+                    title="Saldo" 
+                    color="#4E41F0"                 
+                    amount={150.00} 
+                    footerLabel="atualizado com base nas entradas e saídas" 
+                    icon="dolar" />
+                <WalletBox 
+                    title="Entradas" 
+                    color="#F7931B"                 
+                    amount={5000.00} 
+                    footerLabel="atualizado com base nas entradas e saídas" 
+                    icon="arrowUp" />
+                <WalletBox 
+                    title="Saídas" 
+                    color="#E44C43"                 
+                    amount={4850.00} 
+                    footerLabel="atualizado com base nas entradas e saídas" 
+                    icon="arrowDown" />
+            </Content>
         </Container>
     )
 }

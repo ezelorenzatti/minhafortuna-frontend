@@ -8,7 +8,12 @@ import SelectInput from "../../components/SelectInput";
 import gains from "../../repositories/gains";
 import expenses from "../../repositories/expenses";
 import listOfMonths from "../../utils/months";
+
+import happyImg from '../../assets/happy.svg';
+import sadImg from '../../assets/sad.svg';
+
 import WalletBox from "../../components/WalletBox";
+import MessageBox from "../../components/MessageBox";
 
 const Dashboard: React.FC = () =>{
 
@@ -88,6 +93,18 @@ const Dashboard: React.FC = () =>{
                     amount={4850.00} 
                     footerLabel="atualizado com base nas entradas e saídas" 
                     icon="arrowDown" />
+                <MessageBox
+                    title="Muito Bem!"
+                    description="Sua Carteira está positiva!"
+                    footerText="Continue assim. Considere investir seu saldo."
+                    icon={happyImg}
+                />
+                <MessageBox
+                    title="Muito Bem!"
+                    description="Sua Carteira está positiva!"
+                    footerText="Continue assim. Considere investir seu saldo."
+                    icon={sadImg}
+                />
             </Content>
         </Container>
     )

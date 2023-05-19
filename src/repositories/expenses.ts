@@ -48,7 +48,8 @@ const expenses = [
   {"description":"Compras do mês",        "amount":"700.00","type":"saída","frequency":"recorrente","date":"2023-07-25"},
   {"description":"Cafeteira",             "amount":"250.00","type":"saída","frequency":"eventual",  "date":"2023-07-26"},
   {"description":"Pizza",                 "amount":"60.00", "type":"saída","frequency":"eventual",  "date":"2023-07-19"},
-  {"description":"Pizza",                 "amount":"1193.47", "type":"saída","frequency":"eventual",  "date":"2023-05-19"}
+  {"description":"Pizza",                 "amount":"1193.47", "type":"saída","frequency":"eventual",  "date":"2023-05-19"},
+  {"description":"Vectra",                 "amount":"5000.00", "type":"saída","frequency":"eventual",  "date":"2023-10-19"}
 ]
 
 export default expenses;

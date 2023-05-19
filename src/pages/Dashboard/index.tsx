@@ -15,6 +15,8 @@ import grinningImg from '../../assets/grinning.svg';
 
 import WalletBox from "../../components/WalletBox";
 import MessageBox from "../../components/MessageBox";
+import PieChartBox from "../../components/PieChartBox";
+import HistoryBox from "../../components/HistoryBox";
 
 const Dashboard: React.FC = () =>{
 
@@ -109,6 +111,73 @@ const Dashboard: React.FC = () =>{
         }
     },[totalBalance]);
 
+    const relationExpensesVsGains = useMemo(() => {
+        const total = totalGains + totalExpense;
+        const percentGains = (totalGains / total) * 100;
+        const percentExpenses = (totalExpense / total) * 100;
+
+        const data = [
+            {
+                name:"Entradas",
+                value: percentGains,
+                percent: Number(percentGains.toFixed(1)),
+                color: '#E44C4E'
+            },{
+                name:"Saídas",
+                value: percentExpenses,
+                percent: Number(percentExpenses.toFixed(1)),
+                color:'#F7931B'
+            }
+        ]
+        return data;
+
+    },[totalGains, totalExpense]);
+
+    const historyData = useMemo(( ) => {
+        return listOfMonths.map((_, month) => {
+            let amountEntry = 0;
+            gains.forEach(gain => {
+                const date = new Date(gain.date);
+                const gainMonth = date.getMonth();
+                const gainYear = date.getFullYear();
+                if(gainMonth === month && gainYear === yearSelected){
+                    try {
+                        amountEntry += Number(gain.amount)
+                    } catch {
+                        throw new Error('amountEntry is invalid. amoutEntry must be a valid number');
+                    }                    
+                }
+            });
+            
+            let amountOutput = 0;
+            expenses.forEach(expense => {
+                const date = new Date(expense.date);
+                const expenseMonth = date.getMonth();
+                const expenseYear = date.getFullYear();
+                if(expenseMonth === month && expenseYear === yearSelected){
+                    try {
+                        amountOutput += Number(expense.amount)
+                    } catch {
+                        throw new Error('amountEntry is invalid. amoutEntry must be a valid number');
+                    }                    
+                }
+            });
+
+            return {
+                monthNumber: month,
+                month: listOfMonths[month].substring(0, 3),
+                amountEntry: amountEntry,
+                amountOutput: amountOutput
+            }
+        }).filter((item) => {
+            const date = new Date();
+            const currentMonth = date.getMonth();
+            const currentYear = date.getFullYear();
+            return (yearSelected === currentYear && item.monthNumber <= currentMonth) || (yearSelected < currentYear)
+
+        })
+    },[yearSelected]);
+
     const handleMonthSelected = (month : string) => {
         try {
             const parseMonth = Number(month);
@@ -165,6 +234,15 @@ const Dashboard: React.FC = () =>{
                     footerText={message.footerText}
                     icon={message.icon}
                 />
+                <PieChartBox 
+                    data={relationExpensesVsGains}
+                />
+                <HistoryBox 
+                    data={historyData} 
+                    lineColorAmountEntry="#f7931b" 
+                    lineColorAmountOutput="#e44c4e"
+                />
+
             </Content>
         </Container>
     )

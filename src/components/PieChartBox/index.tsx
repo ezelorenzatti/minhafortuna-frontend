@@ -1,15 +1,15 @@
 import React from 'react';
 
-import { PieChart, Pie, Cell, ResponsiveContainer} from 'recharts';
+import {PieChart, Pie, Cell, ResponsiveContainer} from 'recharts';
 
-import { Container, Sideleft, Sideright, LegendContainer, Legend } from './styles';
+import {Container, Sideleft, Sideright, LegendContainer, Legend} from './styles';
 
 interface IPieChardBoxProps {
     data: {
-        name:string;
-        value:number;
-        percent:number;
-        color:string;
+        name: string;
+        value: number;
+        percent: number;
+        color: string;
     }[]
 }
 
@@ -19,29 +19,29 @@ const PieChartBox: React.FC<IPieChardBoxProps> = ({data}) => (
             <h2>Relação</h2>
             <LegendContainer>
                 {
-                    data.map ((indicator, index) => (
+                    data.map((indicator, index) => (
                         <Legend key={index} color={indicator.color}>
                             <div>{indicator.percent}%</div>
                             <span>{indicator.name}</span>
                         </Legend>
                     ))
                 }
-            </LegendContainer>            
+            </LegendContainer>
         </Sideleft>
         <Sideright>
             <ResponsiveContainer>
-               <PieChart>
+                <PieChart>
                     <Pie data={data} dataKey="percent">
                         {
-                            data.map((indicator, index)=>(
+                            data.map((indicator, index) => (
                                 <Cell key={index} fill={indicator.color}/>
                             ))
                         }
                     </Pie>
-                </PieChart> 
+                </PieChart>
             </ResponsiveContainer>
         </Sideright>
     </Container>
-);  
+);
 
 export default PieChartBox;

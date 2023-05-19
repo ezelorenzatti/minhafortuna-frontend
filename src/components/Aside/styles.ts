@@ -10,9 +10,9 @@ export const Container = styled.div`
 `;
 
 export const Header = styled.header`
-    height: 70px;
-    display: flex;
-    align-items: center;
+  height: 70px;
+  display: flex;
+  align-items: center;
 `;
 export const LogImg = styled.img`
     height: 40px;

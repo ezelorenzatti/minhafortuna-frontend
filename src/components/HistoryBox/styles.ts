@@ -5,18 +5,16 @@ interface ILegendProps {
 }
 
 export const Container = styled.div`
-    width: 100%;
-    flex-direction: column;
+  width: 100%;
+  flex-direction: column;
 
-    background-color: ${props => props.theme.colors.tertiary};
-    color: ${props => props.theme.colors.white};
+  background-color: ${props => props.theme.colors.tertiary};
+  color: ${props => props.theme.colors.white};
 
-    margin: 10px 0;
-    padding: 30px 20px;
+  margin: 10px 0;
+  padding: 30px 20px;
 
-    border-radius: 7px;
-
-
+  border-radius: 7px;
 `;
 
 export const ChartContainer = styled.div`

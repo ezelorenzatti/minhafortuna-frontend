@@ -8,7 +8,7 @@ import Routes from './routes';
 
 
 const App: React.FC = () => {
-    const {toogleTheme, theme} = useTheme();
+    const {theme} = useTheme();
     return (
         <ThemeProvider theme={theme}>
             <GlobalStyles/>

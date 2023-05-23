@@ -1,4 +1,4 @@
-import React, {useMemo, useState} from "react";
+import React, {useCallback, useMemo, useState} from "react";
 
 import {Container, Content} from "./syles";
 import ContentHeader from "../../components/ContentHeader";
@@ -267,23 +267,23 @@ const Dashboard: React.FC = () => {
         ]
     }, [yearSelected, monthSelected]);
 
-    const handleMonthSelected = (month: string) => {
+    const handleMonthSelected = useCallback((month: string) => {
         try {
             const parseMonth = Number(month);
             setMonthSelected(parseMonth);
         } catch (error) {
             throw new Error('invalid month value, is accept 0 - 12')
         }
-    }
+    },[]);
 
-    const handleYearSelected = (year: string) => {
+    const handleYearSelected = useCallback((year: string) => {
         try {
             const parseYear = Number(year);
             setYearSelected(parseYear);
         } catch (error) {
             throw new Error('invalid year value, is accept integer')
         }
-    }
+    },[]);
 
     return (
         <Container>

@@ -18,49 +18,61 @@ export const Container = styled.div`
 `;
 
 export const ChartContainer = styled.div`
-    flex: 1;
-    height: 260px;
+  flex: 1;
+  height: 260px;
 `;
 
-export const ChartHeader  = styled.header`
-    width:100%;
+export const ChartHeader = styled.header`
+  width: 100%;
 
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 
 
-    > h2 {
-        margin-bottom: 20px;
-        padding-left: 17px;
-    }
+  > h2 {
+    margin-bottom: 20px;
+    padding-left: 17px;
+  }
+
+  @media (max-width: 1200px) {
+    flex-direction: column;
+    
+  }
 
 `;
-export const LegendContainer  = styled.ul`
-    list-style: none;
-    display: flex;
-    justify-content: space-between;
+export const LegendContainer = styled.ul`
+  list-style: none;
+  display: flex;
+  padding-right: 16px;
 `;
 
 export const Legend = styled.li<ILegendProps>`
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    margin-bottom: 7px;
-    padding-right: 17px;
+  margin-bottom: 7px;
+  margin-left: 16px;
 
+  > div {
+    background-color: ${props => props.color};
+
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+
+    font-size: 17px;
+    line-height: 50px;
+    text-align: center;
+  }
+
+  > span {
+    margin-left: 5px;
+  }
+
+  @media (max-width: 1280px) {
     > div {
-        background-color: ${props => props.color};
-
-        width: 50px;
-        height: 50px;
-        border-radius: 5px;
-
-        font-size: 17px;
-        line-height: 50px;
-        text-align: center;
+      width: 30px;
+      height: 30px;
     }
-
-    > span {
-        margin-left: 5px;
-    }
+  }
 `;

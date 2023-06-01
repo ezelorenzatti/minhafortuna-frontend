@@ -2,8 +2,8 @@ import React from 'react';
 
 import {
     Container,
-    ToogleLabel,
-    ToogleSelector
+    ToggleLabel,
+    ToggleSelector
 } from './styles';
 
 interface IToogleProps {
@@ -16,13 +16,13 @@ interface IToogleProps {
 
 const Toogle: React.FC<IToogleProps> = ({labelLeft, labelRight, checked, onChange}) => (
     <Container>
-        <ToogleLabel>{labelLeft}</ToogleLabel>
-        <ToogleSelector
+        <ToggleLabel>{labelLeft}</ToggleLabel>
+        <ToggleSelector
             checked={checked}
             checkedIcon={false}
             uncheckedIcon={false}
-            onChange={onChange}></ToogleSelector>
-        <ToogleLabel>{labelRight}</ToogleLabel>
+            onChange={onChange}></ToggleSelector>
+        <ToggleLabel>{labelRight}</ToggleLabel>
     </Container>
 )
 

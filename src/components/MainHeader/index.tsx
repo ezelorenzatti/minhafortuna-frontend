@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
+import Toggle from "../Toggle";
 
 import {Container, Profile, Username, Welcome} from './styles';
-import Toogle from '../Toogle';
 
 import {useTheme} from "../../hooks/theme";
 
@@ -18,7 +18,7 @@ const MainHeader: React.FC = () => {
 
     return (
         <Container>
-            <Toogle labelLeft="Light" labelRight="Dark" checked={darkTheme} onChange={handleChangeTheme}/>
+            <Toggle labelLeft="Light" labelRight="Dark" checked={darkTheme} onChange={handleChangeTheme}/>
             <Profile>
                 <Welcome>Olá</Welcome>
                 <Username>Ezequiel Lorenzatti</Username>

@@ -17,6 +17,14 @@ export const Container = styled.div`
   border-radius: 7px;
 
   display: flex;
+
+  @media (max-width: 1200px) {
+    display: flex;
+    flex-direction: column;
+    
+    width: 100%;
+    height: auto;
+  }
 `;
 
 export const Sideleft = styled.aside`
@@ -32,49 +40,73 @@ export const Sideleft = styled.aside`
 
 
 export const LegendContainer = styled.ul`
-    list-style: none;
+  list-style: none;
 
-    height: 175px;
-    padding-right: 15px;
-    overflow-y: scroll;
+  height: 175px;
+  padding-right: 15px;
+  overflow-y: scroll;
 
-    ::-webkit-scrollbar {
-        width: 10px;
-    }
+  ::-webkit-scrollbar {
+    width: 10px;
+  }
 
-    ::-webkit-scrollbar-thumb {
-        background-color: ${props => props.theme.colors.secondary};
-        border-radius: 10px;
-    }
+  ::-webkit-scrollbar-thumb {
+    background-color: ${props => props.theme.colors.secondary};
+    border-radius: 10px;
+  }
 
-    
-    ::-webkit-scrollbar-track {
-        background-color: ${props => props.theme.colors.tertiary};
-        border-radius: 10px;
-    }
+
+  ::-webkit-scrollbar-track {
+    background-color: ${props => props.theme.colors.tertiary};
+    border-radius: 10px;
+  }
+
+  @media (max-width: 1200px) {
+    display: flex;
+    height: auto;
+  }
 `;
 
 export const Legend = styled.li<ILegendProps>`
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 
-    margin-bottom: 7px;
+  margin-bottom: 7px;
 
+  > div {
+    background-color: ${props => props.color};
+
+    width: 50px;
+    height: 50px;
+    border-radius: 5px;
+
+    font-size: 17px;
+    line-height: 50px;
+    text-align: center;
+  }
+
+  > span {
+    margin-left: 5px;
+  }
+
+  @media (max-width: 1200px) {
     > div {
-        background-color: ${props => props.color};
+      background-color: ${props => props.color};
 
-        width: 50px;
-        height: 50px;
-        border-radius: 5px;
+      width: 30px;
+      height: 30px;
 
-        font-size: 17px;
-        line-height: 50px;
-        text-align: center;
+      font-size: 10px;
+      line-height: 30px;
+      text-align: center;
+      padding-right: 5px;
     }
-
-    > span {
-        margin-left: 5px;
+    
+    >span {
+      padding-right: 10px;
+      font-size: 12px;
     }
+  }
 `;
 
 export const Sideright = styled.main`

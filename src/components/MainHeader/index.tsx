@@ -4,9 +4,11 @@ import Toggle from "../Toggle";
 import {Container, Profile, Username, Welcome} from './styles';
 
 import {useTheme} from "../../hooks/theme";
+import {useAuth} from "../../hooks/auth";
 
 const MainHeader: React.FC = () => {
     const {toogleTheme, theme} = useTheme();
+    const {loggedUser} = useAuth();
 
     const [darkTheme, setDarkTheme] = useState(() =>
         theme.title === 'dark'
@@ -21,7 +23,7 @@ const MainHeader: React.FC = () => {
             <Toggle labelLeft="Light" labelRight="Dark" checked={darkTheme} onChange={handleChangeTheme}/>
             <Profile>
                 <Welcome>Olá</Welcome>
-                <Username>Ezequiel Lorenzatti</Username>
+                <Username>{loggedUser}</Username>
             </Profile>
         </Container>
     );

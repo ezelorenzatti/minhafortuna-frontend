@@ -49,3 +49,13 @@ export const FormTitle = styled.h1`
     border-bottom: 10px solid ${props => props.theme.colors.warning};
   }
 `;
+
+export const ErrorMessage = styled.div`
+  margin-top: 20px;
+  width: 500px;
+  border-radius: 5px;
+  background-color: #ffcccc;
+  color: #ff0000;
+  padding: 10px;
+  margin-bottom: 10px;
+`;

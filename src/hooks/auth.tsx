@@ -10,6 +10,8 @@ interface IAuthContext {
 
     loggedUser: string;
 
+    token: string;
+
     signIn(email: string, password: string): void;
 
     signUp(name: string, email: string, password: string, confirmPassword: string): void
@@ -20,14 +22,20 @@ interface IAuthContext {
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
-const messageError:any = {Unauthorized: "Não Autorizado"};
+const messageError: any = {Unauthorized: "Não Autorizado"};
 
 const AuthProvider: React.FC<Props> = ({children}) => {
+
     const [loggedUser, setLoggedUser] = useState<string>('');
     const [logged, setLogged]
         = useState<boolean>(() => {
         const isLogged = localStorage.getItem('@minha-carteira:logged');
         return !!isLogged;
+    });
+    const [token, setToken]
+        = useState<string>(() => {
+        const token = localStorage.getItem('@minha-carteira:token') || '';
+        return token;
     });
 
     const signIn = async (email: string, password: string) => {
@@ -37,6 +45,7 @@ const AuthProvider: React.FC<Props> = ({children}) => {
             localStorage.setItem('@minha-carteira:token', token);
             localStorage.setItem('@minha-carteira:logged', 'true');
             setLogged(true);
+            setToken(token);
             setLoggedUser(JSON.parse(atob(token.split('.')[1])).name);
         } catch (error: any) {
             const message = messageError[error.response.data.error] || error.response.data.error;
@@ -56,6 +65,7 @@ const AuthProvider: React.FC<Props> = ({children}) => {
             localStorage.setItem('@minha-carteira:token', token);
             localStorage.setItem('@minha-carteira:logged', 'true');
             setLogged(true);
+            setToken(token);
             setLoggedUser(JSON.parse(atob(token.split('.')[1])).name);
         } catch (error: any) {
             const message = messageError[error.response.data.error] || error.response.data.error;
@@ -66,11 +76,13 @@ const AuthProvider: React.FC<Props> = ({children}) => {
     const signOut = () => {
         localStorage.removeItem('@minha-carteira:logged');
         localStorage.removeItem('@minha-carteira:token');
-        setLogged(false);
+        setLogged(false)
+        setToken('');
+        setLoggedUser('');
     }
 
     return (
-        <AuthContext.Provider value={{logged, signIn, signOut, signUp, loggedUser}}>
+        <AuthContext.Provider value={{logged, token, signIn, signOut, signUp, loggedUser}}>
             {children}
         </AuthContext.Provider>
     );

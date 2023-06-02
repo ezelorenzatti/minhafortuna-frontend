@@ -1,14 +1,7 @@
 import React, {useState} from 'react';
 
 import Toggle from "../Toggle"
-import {
-    MdDashboard,
-    MdArrowDownward,
-    MdArrowUpward,
-    MdExitToApp,
-    MdClose,
-    MdMenu,
-} from 'react-icons/md';
+import {MdArrowDownward, MdArrowUpward, MdClose, MdDashboard, MdExitToApp, MdMenu,} from 'react-icons/md';
 
 import logoImg from '../../assets/logo.svg';
 
@@ -19,13 +12,15 @@ import {
     Container,
     Header,
     LogImg,
-    Title,
     MenuContainer,
-    MenuItemLink,
     MenuItemButton,
-    ToggleMenu,
+    MenuItemLink,
     ThemeToogleFooter,
+    Title,
+    ToggleMenu,
 } from './styles';
+import {useNavigate} from "react-router-dom";
+
 
 const Aside: React.FC = () => {
     const {signOut} = useAuth();
@@ -36,6 +31,13 @@ const Aside: React.FC = () => {
     const [darkTheme, setDarkTheme] = useState(() =>
         theme.title === 'dark'
     );
+
+    const navigator = useNavigate();
+
+    const handleSignOut = () => {
+        navigator('/');
+        signOut();
+    }
 
     const handleToggleMenu = () => {
         setToggleMenuIsOpened(!toggleMenuIsOpened);
@@ -67,7 +69,11 @@ const Aside: React.FC = () => {
                 <MdArrowDownward/>
                 Saídas
             </MenuItemLink>
-            <MenuItemButton onClick={signOut}>
+            <MenuItemLink href="/profile">
+                <MdArrowDownward/>
+                Meu Perfil
+            </MenuItemLink>
+            <MenuItemButton onClick={handleSignOut}>
                 <MdExitToApp/>
                 Sair
             </MenuItemButton>

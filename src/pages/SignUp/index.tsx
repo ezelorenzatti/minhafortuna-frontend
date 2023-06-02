@@ -1,5 +1,4 @@
 import React, {useState} from "react";
-import {useNavigate} from "react-router-dom";
 import {Container, ErrorMessage, Form, FormTitle, Logo} from "./styles";
 
 import logoImg from "../../assets/logo.svg";
@@ -7,28 +6,30 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 
 import {useAuth} from '../../hooks/auth';
+import {useNavigate} from "react-router-dom";
 
-const SignIn: React.FC = () => {
+const SignUp: React.FC = () => {
+    const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
+    const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [error, setError] = useState<string>('');
 
-    const {signIn} = useAuth();
+    const {signUp} = useAuth();
 
     const navigate = useNavigate();
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
-            await signIn(email, password);
+            await signUp(name, email, password, confirmPassword);
         } catch (message: any) {
             setError(message);
         }
     }
-
-    const handleSignUp = async (e: any) => {
+    const handleBack = async (e: any) => {
         e.preventDefault();
-        navigate("/signUp");
+        navigate('/');
     }
 
     return (
@@ -39,8 +40,16 @@ const SignIn: React.FC = () => {
             </Logo>
             <Form onSubmit={handleSubmit}>
                 <FormTitle>
-                    Entrar
+                    Cadastre-se
                 </FormTitle>
+
+                <Input
+                    placeholder="nome"
+                    type="text"
+                    required
+                    onChange={(e) => setName(e.target.value)}
+                    onFocus={(e) => setError('')}
+                />
 
                 <Input
                     placeholder="e-mail"
@@ -56,9 +65,16 @@ const SignIn: React.FC = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     onFocus={(e) => setError('')}
                 />
+                <Input
+                    placeholder="confirmar senha"
+                    type="password"
+                    required
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onFocus={(e) => setError('')}
+                />
 
-                <Button type="submit">Acessar</Button>
-                <Button type="button" onClick={handleSignUp}>Cadastre-se</Button>
+                <Button type="submit">Cadastrar</Button>
+                <Button type="button" onClick={handleBack}>Voltar</Button>
             </Form>
 
             {error &&
@@ -70,4 +86,4 @@ const SignIn: React.FC = () => {
     )
 }
 
-export default SignIn;
+export default SignUp;

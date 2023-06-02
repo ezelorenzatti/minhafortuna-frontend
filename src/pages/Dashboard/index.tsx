@@ -1,6 +1,6 @@
 import React, {useCallback, useMemo, useState} from "react";
 
-import {Container, Content} from "./syles";
+import {Container, Content} from "./styles";
 import ContentHeader from "../../components/ContentHeader";
 import SelectInput from "../../components/SelectInput";
 

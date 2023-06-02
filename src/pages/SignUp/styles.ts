@@ -30,7 +30,7 @@ export const Logo = styled.div`
 
 export const Form = styled.form`
   width: 300px;
-  height: 340px;
+  height: 435px;
   
   padding: 30px;
   border-radius: 10px;

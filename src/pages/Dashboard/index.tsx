@@ -1,330 +1,284 @@
-import React, {useCallback, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 
-import {Container, Content} from "./styles";
+import {Container, Content, CustomDatePicker, DateSelect, Label} from "./styles";
 import ContentHeader from "../../components/ContentHeader";
-import SelectInput from "../../components/SelectInput";
-
-
-import gains from "../../repositories/gains";
-import expenses from "../../repositories/expenses";
 import listOfMonths from "../../utils/months";
 
-import happyImg from '../../assets/happy.svg';
-import sadImg from '../../assets/sad.svg';
-import grinningImg from '../../assets/grinning.svg';
-
 import WalletBox from "../../components/WalletBox";
-import MessageBox from "../../components/MessageBox";
 import PieChartBox from "../../components/PieChartBox";
 import HistoryBox from "../../components/HistoryBox";
 import BarChartBox from "../../components/BarChartBox";
 
+import pt from 'date-fns/locale/pt-BR';
+import {registerLocale, setDefaultLocale} from "react-datepicker";
+import {fetchGetData} from "../../services/api/api";
+import {format} from "date-fns";
+
+registerLocale('pt', pt);
+setDefaultLocale('pt');
+
+interface IOperations {
+    amount: number;
+    currencyCode: string;
+    currencyName: string;
+    date: string;
+    operationType: string;
+    plataformId: number;
+    taxes: number;
+    total: number;
+    unitValue: number;
+}
+
 const Dashboard: React.FC = () => {
-
-    const [monthSelected, setMonthSelected] = useState<number>(new Date().getMonth() + 1);
-    const [yearSelected, setYearSelected] = useState<number>(new Date().getFullYear());
-
-    const months = useMemo(() => {
-        return listOfMonths.map((month, index) => {
-            return {value: index + 1, label: month}
-        })
-    }, [])
-
-    const years = useMemo(() => {
-        let uniqueYears: number[] = [];
-
-        [...expenses, ...gains].forEach(item => {
-            const date = new Date(item.date);
-            const year = date.getFullYear();
-
-            if (!uniqueYears.includes(year)) {
-                uniqueYears.push(year);
-            }
-        });
-
-        return uniqueYears.map(year => {
-            return {value: year, label: year}
-        })
-    }, [])
-
-    const totalExpense = useMemo(() => {
-        let total: number = 0;
-        expenses.forEach(item => {
-            const date = new Date(item.date);
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-
-            if (month === monthSelected && year === yearSelected) {
-                try {
-                    total += Number(item.amount);
-                } catch {
-                    throw new Error('Invalid amount" Amount must be a number.');
-                }
-            }
-        });
-        return total;
-    }, [monthSelected, yearSelected]);
-
-    const totalGains = useMemo(() => {
-        let total: number = 0;
-        gains.forEach(item => {
-            const date = new Date(item.date);
-            const year = date.getFullYear();
-            const month = date.getMonth() + 1;
-
-            if (month === monthSelected && year === yearSelected) {
-                try {
-                    total += Number(item.amount);
-                } catch {
-                    throw new Error('Invalid amount" Amount must be a number.');
-                }
-            }
-        });
-        return total;
-    }, [monthSelected, yearSelected]);
-
-    const totalBalance = useMemo(() => {
-        return totalGains - totalExpense;
-    }, [totalExpense, totalGains]);
-
-    const message = useMemo(() => {
-        if (totalBalance < 0) {
-            return {
-                title: "Que triste!",
-                description: "Neste mês você gastou mais do que deveria.",
-                footerText: "Verifique seus gastos e tente cortar algumas coisas desnecessárias",
-                icon: sadImg
-            }
-        } else if (totalGains === 0 && totalExpense === 0) {
-            return {
-                title: "Ops!",
-                description: "Neste mês não há registro de entradas ou saídas.",
-                footerText: "Parece que você não fez nenhum registro do no mês e ano selecionados",
-                icon: grinningImg
-            }
-        } else if (totalBalance === 0) {
-            return {
-                title: "Ufaa!",
-                description: "Neste mês você gastou exatamente o que ganhou.",
-                footerText: "Tenha cuidado. No próximo mês tem poupar o seu dinheiro",
-                icon: grinningImg
-            }
+    const [operations, setOperations] = useState<IOperations[]>([]);
+    const [startDate, setStartDate] = useState(() => {
+        let dateStorage = localStorage.getItem("@minha-carteira:startDate");
+        let date = new Date();
+        if (dateStorage) {
+            const splitDate = dateStorage.split("-");
+            date = new Date(Number(splitDate[0]), Number(splitDate[1]) - 1, Number(splitDate[2]));
         } else {
-            return {
-                title: "Muito bem!",
-                description: "Sua Carteira está positiva!",
-                footerText: "Continue assim. Considere investir o seu saldo",
-                icon: happyImg
-            }
+            date = new Date(date.getFullYear(), date.getMonth(), 1);
         }
-    }, [totalBalance, totalExpense, totalGains]);
+        return date;
+    });
+    const [endDate, setEndDate] = useState(() => {
+        let dateStorage = localStorage.getItem("@minha-carteira:endDate");
+        let date = new Date();
+        if (dateStorage) {
+            const splitDate = dateStorage.split("-");
+            date = new Date(Number(splitDate[0]), Number(splitDate[1]) - 1, Number(splitDate[2]));
+        }
+        return date;
+    });
 
-    const relationExpensesVsGains = useMemo(() => {
-        const total = totalGains + totalExpense;
-        const percentGains = Number(((totalGains / total) * 100).toFixed(1));
-        const percentExpenses = Number(((totalExpense / total) * 100).toFixed(1));
+    async function fetchOperations() {
+        const formatStartDate = format(startDate, "yyyy-MM-dd");
+        const formatEndDate = format(endDate, "yyyy-MM-dd");
+        const operations: IOperations[] = await fetchGetData(`/operation?operationType=SELL&operationType=BUY&startDate=${formatStartDate}&endDate=${formatEndDate}`);
+        setOperations(operations);
+    }
 
+    useEffect(() => {
+        fetchOperations();
+    }, [])
+
+    const totalSell = useMemo(() => {
+        let total: number = 0;
+        operations.forEach(item => {
+            if (item.operationType === 'SELL') {
+                total += item.total;
+            }
+        })
+        return total;
+    }, [operations]);
+
+    const totalBuy = useMemo(() => {
+        let total: number = 0;
+        operations.forEach(item => {
+            if (item.operationType === 'BUY') {
+                total += item.total;
+            }
+        })
+        return total;
+    }, [operations]);
+
+    const relationSellVsBuy = useMemo(() => {
+        const total = totalBuy + totalSell;
+        const percentBuy = Number(((totalBuy / total) * 100).toFixed(1));
+        const percentSell = Number(((totalSell / total) * 100).toFixed(1));
 
         const data = [
             {
-                name: "Entradas",
-                value: totalGains,
-                percent: percentGains ? percentGains : 0,
+                name: "Compras",
+                value: totalBuy,
+                percent: percentBuy ? percentBuy : 0,
                 color: '#E44C4E'
             }, {
-                name: "Saídas",
-                value: totalExpense,
-                percent: percentExpenses ? percentExpenses : 0,
+                name: "Vendas",
+                value: totalSell,
+                percent: percentSell ? percentSell : 0,
                 color: '#F7931B'
             }
         ]
         return data;
 
-    }, [totalGains, totalExpense]);
+    }, [totalBuy, totalSell]);
 
     const historyData = useMemo(() => {
-        return listOfMonths.map((_, month) => {
-            let amountEntry = 0;
-            gains.forEach(gain => {
-                const date = new Date(gain.date);
-                const gainMonth = date.getMonth();
-                const gainYear = date.getFullYear();
-                if (gainMonth === month && gainYear === yearSelected) {
-                    try {
-                        amountEntry += Number(gain.amount)
-                    } catch {
-                        throw new Error('amountEntry is invalid. amoutEntry must be a valid number');
-                    }
-                }
-            });
+        const yearsMap = new Map<number, Map<number, { amountBuy: number, amountSell: number }>>();
 
-            let amountOutput = 0;
-            expenses.forEach(expense => {
-                const date = new Date(expense.date);
-                const expenseMonth = date.getMonth();
-                const expenseYear = date.getFullYear();
-                if (expenseMonth === month && expenseYear === yearSelected) {
-                    try {
-                        amountOutput += Number(expense.amount)
-                    } catch {
-                        throw new Error('amountEntry is invalid. amoutEntry must be a valid number');
-                    }
-                }
-            });
+        operations.forEach(item => {
+            const [year, month, day] = item.date.split('-');
+            const date = new Date(Number(year), Number(month) - 1, Number(day));
+            const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60 * 1000);
+            const utcYear = utcDate.getUTCFullYear();
+            const utcMonth = utcDate.getUTCMonth();
 
-            return {
+            if (!yearsMap.has(utcYear)) {
+                yearsMap.set(utcYear, new Map<number, { amountBuy: number, amountSell: number }>());
+            }
+
+            const monthsMap = yearsMap.get(utcYear)!;
+
+            if (!monthsMap.has(utcMonth)) {
+                monthsMap.set(utcMonth, {amountBuy: 0, amountSell: 0});
+            }
+
+            const monthData = monthsMap.get(utcMonth)!;
+
+            if (item.operationType === 'BUY') {
+                monthData.amountBuy += Number(item.total);
+            } else {
+                monthData.amountSell += Number(item.total);
+            }
+        });
+
+        const history = Array.from(yearsMap).map(([year, monthsMap]) => ({
+            year,
+            months: Array.from(Array(12).keys()).map(month => ({
+                year,
                 monthNumber: month,
                 month: listOfMonths[month].substring(0, 3),
-                amountEntry: amountEntry,
-                amountOutput: amountOutput
+                amountBuy: monthsMap.get(month)?.amountBuy ?? 0,
+                amountSell: monthsMap.get(month)?.amountSell ?? 0
+            }))
+        }));
+
+        return history;
+    }, [operations]);
+
+    const relationBuyGroupByCurrency = useMemo(() => {
+        const currenciesMap = new Map<string, number>();
+        let total = 0;
+
+        operations.forEach((item: IOperations) => {
+            if (item.operationType === 'BUY') {
+                const currencyCode = item.currencyCode;
+                const totalValue = item.total;
+                const currentAmount = currenciesMap.get(currencyCode) ?? 0;
+                const updatedAmount = currentAmount + totalValue;
+                currenciesMap.set(currencyCode, updatedAmount);
+                total += totalValue;
             }
-        }).filter((item) => {
-            const date = new Date();
-            const currentMonth = date.getMonth();
-            const currentYear = date.getFullYear();
-            return (yearSelected === currentYear && item.monthNumber <= currentMonth) || (yearSelected < currentYear)
+        });
 
-        })
-    }, [yearSelected]);
+        const colors = getRandomColors(currenciesMap.size);
+        const percentual = Array.from(currenciesMap).map(([currencyCode, amount], index) => {
+            const currencyName = operations.find((item) => item.currencyCode === currencyCode)?.currencyName;
+            return {
+                currencyCode,
+                currencyName: currencyName || '',
+                amount,
+                percent: Number(((amount / total) * 100).toFixed(1)),
+                color: colors[index],
+            };
+        });
 
-    const relationGainsRecurrentVsEventual = useMemo(() => {
-        let amountRecurrent = 0;
-        let amountEventual = 0;
-        gains
-            .filter((gain) => {
-                const date = new Date(gain.date);
-                const year = date.getFullYear();
-                const month = date.getMonth() + 1;
-                return month === monthSelected && year === yearSelected;
-            })
-            .forEach((gain) => {
-                if (gain.frequency === 'recorrente') {
-                    return amountRecurrent += Number(gain.amount);
-                }
-                if (gain.frequency === 'eventual') {
-                    return amountEventual += Number(gain.amount);
-                }
-            });
-
-        const total = amountEventual + amountRecurrent;
-        const recurrentPercent = Number(((amountRecurrent / total) * 100).toFixed(1));
-        const eventualPercent = Number(((amountEventual / total) * 100).toFixed(1));
-
-
-        return [
-            {
-                name: 'Recorrentes',
-                amount: amountRecurrent,
-                percent: recurrentPercent ? recurrentPercent : 0,
-                color: "#f79b1b"
-            },
-            {
-                name: 'Eventuais',
-                amount: amountEventual,
-                percent: eventualPercent ? eventualPercent : 0,
-                color: "#e44c4e"
-            }
-        ]
-    }, [yearSelected, monthSelected]);
+        return percentual;
+    }, [operations]);
 
     const relationExpensesRecurrentVsEventual = useMemo(() => {
-        let amountRecurrent = 0;
-        let amountEventual = 0;
-        expenses
-            .filter((expense) => {
-                const date = new Date(expense.date);
-                const year = date.getFullYear();
-                const month = date.getMonth() + 1;
-                return month === monthSelected && year === yearSelected;
-            })
-            .forEach((expense) => {
-                if (expense.frequency === 'recorrente') {
-                    return amountRecurrent += Number(expense.amount);
-                }
-                if (expense.frequency === 'eventual') {
-                    return amountEventual += Number(expense.amount);
-                }
-            });
+        const currenciesMap = new Map<string, number>();
+        let total = 0;
 
-        const total = amountEventual + amountRecurrent;
-        const recurrentPercent = Number(((amountRecurrent / total) * 100).toFixed(1));
-        const eventualPercent = Number(((amountEventual / total) * 100).toFixed(1));
-
-
-        return [
-            {
-                name: 'Recorrentes',
-                amount: amountRecurrent,
-                percent: recurrentPercent ? recurrentPercent : 0,
-                color: "#f79b1b"
-            },
-            {
-                name: 'Eventuais',
-                amount: amountEventual,
-                percent: eventualPercent ? eventualPercent : 0,
-                color: "#e44c4e"
+        operations.forEach((item: IOperations) => {
+            if (item.operationType === 'SELL') {
+                const currencyCode = item.currencyCode;
+                const totalValue = item.total;
+                const currentAmount = currenciesMap.get(currencyCode) ?? 0;
+                const updatedAmount = currentAmount + totalValue;
+                currenciesMap.set(currencyCode, updatedAmount);
+                total += totalValue;
             }
-        ]
-    }, [yearSelected, monthSelected]);
+        });
 
-    const handleMonthSelected = useCallback((month: string) => {
-        try {
-            const parseMonth = Number(month);
-            setMonthSelected(parseMonth);
-        } catch (error) {
-            throw new Error('invalid month value, is accept 0 - 12')
-        }
-    },[]);
+        const colors = getRandomColors(currenciesMap.size);
+        const percentual = Array.from(currenciesMap).map(([currencyCode, amount], index) => {
+            const currencyName = operations.find((item) => item.currencyCode === currencyCode)?.currencyName;
+            return {
+                currencyCode,
+                currencyName: currencyName || '',
+                amount,
+                percent: Number(((amount / total) * 100).toFixed(1)),
+                color: colors[index],
+            };
+        });
 
-    const handleYearSelected = useCallback((year: string) => {
-        try {
-            const parseYear = Number(year);
-            setYearSelected(parseYear);
-        } catch (error) {
-            throw new Error('invalid year value, is accept integer')
+        return percentual;
+    }, [operations]);
+
+    function getRandomColors(count: number): string[] {
+        const colors: string[] = [];
+        const usedColors: Set<string> = new Set();
+
+        for (let i = 0; i < count; i++) {
+            let color = generateRandomColor();
+
+            // Verifica se a cor já foi utilizada
+            while (usedColors.has(color)) {
+                color = generateRandomColor();
+            }
+
+            colors.push(color);
+            usedColors.add(color);
         }
-    },[]);
+
+        return colors;
+    }
+
+    function generateRandomColor(): string {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+
+        return color;
+    }
+
+    const handleStartDate = useCallback((date: Date) => {
+        localStorage.setItem("@minha-carteira:startDate", `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
+        setStartDate(date);
+    }, []);
+
+    const handleEndDate = useCallback((date: Date) => {
+        localStorage.setItem("@minha-carteira:endDate", `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
+        setEndDate(date);
+    }, []);
 
     return (
         <Container>
             <ContentHeader title="Dashboard" lineColor="#F7931B">
-                <SelectInput
-                    options={months}
-                    onChange={(event) => handleMonthSelected(event.target.value)}
-                    defaultValue={monthSelected}
-                />
-                <SelectInput
-                    options={years}
-                    onChange={(event) => handleYearSelected(event.target.value)}
-                    defaultValue={yearSelected}/>
+                <DateSelect>
+                    <Label>Início</Label>
+                    <CustomDatePicker locale="pt" selected={startDate}
+                                      onChange={(date: Date) => handleStartDate(date)}
+                                      dateFormat="dd/MM/yyyy"/>
+                </DateSelect>
+                <DateSelect>
+                    <Label>Fim</Label>
+                    <CustomDatePicker locale="pt" selected={endDate}
+                                      onChange={(date: Date) => handleEndDate(date)}
+                                      dateFormat="dd/MM/yyyy"/>
+                </DateSelect>
             </ContentHeader>
             <Content>
                 <WalletBox
-                    title="saldo"
-                    color="#4E41F0"
-                    amount={totalBalance}
-                    footerLabel="atualizado com base nas entradas e saídas"
-                    icon="dolar"/>
-                <WalletBox
-                    title="Entradas"
+                    title="Compras"
                     color="#F7931B"
-                    amount={totalGains}
-                    footerLabel="atualizado com base nas entradas e saídas"
+                    amount={totalBuy}
+                    footerLabel="atualizado com base nas movimentações do período"
                     icon="arrowUp"/>
                 <WalletBox
-                    title="Saídas"
+                    title="Vendas"
                     color="#E44C43"
-                    amount={totalExpense}
-                    footerLabel="atualizado com base nas entradas e saídas"
+                    amount={totalSell}
+                    footerLabel="atualizado com base nas movimentações do período"
                     icon="arrowDown"/>
-                <MessageBox
-                    title={message.title}
-                    description={message.description}
-                    footerText={message.footerText}
-                    icon={message.icon}
-                />
                 <PieChartBox
-                    data={relationExpensesVsGains}
+                    data={relationSellVsBuy}
                 />
                 <HistoryBox
                     data={historyData}
@@ -332,11 +286,11 @@ const Dashboard: React.FC = () => {
                     lineColorAmountOutput="#e44c4e"
                 />
                 <BarChartBox
-                    title="Entradas"
-                    data={relationGainsRecurrentVsEventual}
+                    title="Compras"
+                    data={relationBuyGroupByCurrency}
                 />
                 <BarChartBox
-                    title="Saídas"
+                    title="Vendas"
                     data={relationExpensesRecurrentVsEventual}
                 />
             </Content>

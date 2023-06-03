@@ -7,4 +7,5 @@ const formatDate = (date: string): string => {
 
     return `${day}/${month}/${year}`;
 }
+
 export default formatDate;

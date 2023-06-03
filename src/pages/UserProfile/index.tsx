@@ -7,18 +7,18 @@ import {fetchGetData, fetchPostData} from "../../services/api/api";
 
 interface IUserProfile {
     id: string;
-    nome: string;
+    name: string;
     email: string;
-    fone: string;
-    senha: string;
-    confirmarSenha: string;
+    phone: string;
+    password: string;
+    confirmPassword: string;
 }
 
 const UserProfile: React.FC = () => {
     const [id, setId] = useState<string>('');
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
-    const [fone, setFone] = useState<string>('');
+    const [phone, setPhone] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
 
@@ -35,11 +35,11 @@ const UserProfile: React.FC = () => {
 
             const message = await fetchPostData("/usuario", {
                 id: id,
-                nome: name,
+                name: name,
                 email: email,
-                fone: fone,
-                senha: password,
-                confirmarSenha: confirmPassword
+                phone: phone,
+                password: password,
+                confirmPassword: confirmPassword
             });
             setMessage(message);
         } catch (message: any) {
@@ -50,8 +50,8 @@ const UserProfile: React.FC = () => {
     async function fetchProfile() {
         const profile: IUserProfile = await fetchGetData("/usuario/profile");
         setId(profile.id);
-        setName(profile.nome);
-        setFone(profile.fone);
+        setName(profile.name);
+        setPhone(profile.phone);
         setEmail(profile.email);
     }
 
@@ -63,7 +63,7 @@ const UserProfile: React.FC = () => {
         <Container>
             <Form onSubmit={handleSubmit}>
                 <FormTitle>
-                    Meu Cadastro
+                    Meu Perfil
                 </FormTitle>
                 <Input
                     placeholder="nome"
@@ -85,8 +85,8 @@ const UserProfile: React.FC = () => {
                 <Input
                     placeholder="fone"
                     type="text"
-                    defaultValue={fone}
-                    onChange={(e) => setFone(e.target.value)}
+                    defaultValue={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                     onFocus={(e) => setError('')}
                 />
                 <Input

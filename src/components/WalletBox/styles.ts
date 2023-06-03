@@ -20,7 +20,7 @@ const animate = keyframes`
 
 export const Container = styled.div<IContainerProps>`
   width: 32%;
-  height: 150px;
+  height: 260px;
 
   margin: 10px 0;
 

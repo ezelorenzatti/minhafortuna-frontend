@@ -1,15 +1,13 @@
-import React, {useMemo, useState, useEffect} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {useParams} from 'react-router-dom';
-import {Container, Content, Filters} from "./syles";
+import {Container, Content, CustomDatePicker, DateSelect, Filters, Label} from "./syles";
 import ContentHeader from "../../components/ContentHeader";
-import SelectInput from "../../components/SelectInput";
 import HistoryFinanceCard from "../../components/HistoryFinanceCard";
 
 import gains from "../../repositories/gains";
 import expenses from "../../repositories/expenses";
 import formatCurrency from "../../utils/formatCurrency";
 import formatDate from "../../utils/formatDate";
-import listOfMonths from "../../utils/months";
 
 interface IData {
     id: number;
@@ -22,76 +20,54 @@ interface IData {
 }
 
 const List: React.FC = () => {
+    const [startDate, setStartDate] = useState(() => {
+        let dateStorage = localStorage.getItem("@minha-carteira:startDate");
+        let date = new Date();
+        if (dateStorage) {
+            const splitDate = dateStorage.split("-");
+            date = new Date(Number(splitDate[0]), Number(splitDate[1]) - 1, Number(splitDate[2]));
+        } else {
+            date = new Date(date.getFullYear(), date.getMonth(), 1);
+        }
+        return date;
+    });
+
+    const [endDate, setEndDate] = useState(() => {
+        let dateStorage = localStorage.getItem("@minha-carteira:endDate");
+        let date = new Date();
+        if (dateStorage) {
+            const splitDate = dateStorage.split("-");
+            date = new Date(Number(splitDate[0]), Number(splitDate[1]) - 1, Number(splitDate[2]));
+        }
+        return date;
+    });
+
     const [data, setData] = useState<IData[]>([]);
-    const [monthSelected, setMonthSelected] = useState<number>(new Date().getMonth() + 1);
-    const [yearSelected, setYearSelected] = useState<number>(new Date().getFullYear());
-    const [frequecyFilterSelected, setfrequecyFilterSelected] = useState<string[]>(['recorrente', 'eventual']);
+
+    const [currencyFilterSelected, setcurrencyFilterSelected] = useState<string[]>(['recorrente', 'eventual']);
 
     const {type: movimentType} = useParams();
 
     const pageData = useMemo(() => {
         return movimentType === 'entry-balance' ?
             {
-                title: 'Entradas',
+                title: 'Compras',
                 lineColor: '#4E41F0',
                 listData: gains
             } : {
-                title: 'Saídas',
+                title: 'Vendas',
                 lineColor: '#E44c4E',
                 listData: expenses
             }
     }, [movimentType]);
 
-    const months = useMemo(() => {
-        return listOfMonths.map((month, index) => {
-            return {value: index + 1, label: month}
-        })
-    }, [])
-
-    const years = useMemo(() => {
-        let uniqueYears: number[] = [];
-
-        const {listData} = pageData;
-
-        listData.forEach(item => {
-            const date = new Date(item.date);
-            const year = date.getFullYear();
-
-            if (!uniqueYears.includes(year)) {
-                uniqueYears.push(year);
-            }
-        });
-
-        return uniqueYears.map(year => {
-            return {value: year, label: year}
-        })
-    }, [pageData])
-
     const handleFrequencyClick = (frequency: string) => {
-        const alreadySelected = frequecyFilterSelected.findIndex(item => item === frequency);
+        const alreadySelected = currencyFilterSelected.findIndex(item => item === frequency);
         if (alreadySelected >= 0) {
-            const filtered = frequecyFilterSelected.filter(item => item !== frequency);
-            setfrequecyFilterSelected(filtered);
+            const filtered = currencyFilterSelected.filter(item => item !== frequency);
+            setcurrencyFilterSelected(filtered);
         } else {
-            setfrequecyFilterSelected((prev) => [...prev, frequency]);
-        }
-    }
-
-    const handleMonthSelected = (month: string) => {
-        try {
-            const parseMonth = Number(month);
-            setMonthSelected(parseMonth);
-        } catch (error) {
-            throw new Error('invalid month value, is accept 0 - 12')
-        }
-    }
-
-    const handleYearSelected = (year: string) => {
-        try {
-            const parseYear = Number(year);
-            setYearSelected(parseYear);
-        } catch (error) {
-            throw new Error('invalid year value, is accept integer')
+            setcurrencyFilterSelected((prev) => [...prev, frequency]);
         }
     }
 
@@ -99,9 +75,7 @@ const List: React.FC = () => {
         const {listData} = pageData;
         const filteredDate = listData.filter(item => {
             const date = new Date(item.date);
-            const month = date.getMonth() + 1;
-            const year = date.getFullYear();
-            return month === monthSelected && year === yearSelected && frequecyFilterSelected.includes(item.frequency);
+            return date >= startDate && date <= endDate && currencyFilterSelected.includes(item.frequency);
         });
         const formattedData = filteredDate.map((item, index) => {
             return {
@@ -115,26 +89,27 @@ const List: React.FC = () => {
             }
         })
         setData(formattedData);
-    }, [pageData, monthSelected, yearSelected, frequecyFilterSelected]);
+    }, [pageData, startDate, endDate, currencyFilterSelected]);
 
     return (
         <Container>
             <ContentHeader title={pageData.title} lineColor={pageData.lineColor}>
-                <SelectInput
-                    options={months}
-                    onChange={(event) => handleMonthSelected(event.target.value)}
-                    defaultValue={monthSelected}
-                />
-                <SelectInput
-                    options={years}
-                    onChange={(event) => handleYearSelected(event.target.value)}
-                    defaultValue={yearSelected}/>
+                <DateSelect>
+                    <Label>Início</Label>
+                    <CustomDatePicker locale="pt" selected={startDate}
+                                      onChange={(date: Date) => setStartDate(date)}/>
+                </DateSelect>
+                <DateSelect>
+                    <Label>Fim</Label>
+                    <CustomDatePicker locale="pt" selected={endDate}
+                                      onChange={(date: Date) => setEndDate(date)}/>
+                </DateSelect>
             </ContentHeader>
 
             <Filters>
                 <button type="button"
                         className={`tag-filter tag-filter-recurrent
-                    ${frequecyFilterSelected.includes('recorrente') && 'tag-actived'}`}
+                    ${currencyFilterSelected.includes('recorrente') && 'tag-actived'}`}
                         onClick={() => handleFrequencyClick('recorrente')}
                 >
                     Recorrentes
@@ -142,7 +117,7 @@ const List: React.FC = () => {
 
                 <button type="button"
                         className={`tag-filter tag-filter-eventual
-                    ${frequecyFilterSelected.includes('eventual') && 'tag-actived'}`}
+                    ${currencyFilterSelected.includes('eventual') && 'tag-actived'}`}
                         onClick={() => handleFrequencyClick('eventual')}
                 >
                     Eventuais

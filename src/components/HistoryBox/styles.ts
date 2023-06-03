@@ -62,6 +62,8 @@ export const LegendContainer = styled.ul`
   padding-right: 16px;
 `;
 
+
+
 export const Legend = styled.li<ILegendProps>`
   display: flex;
   align-items: center;
@@ -91,4 +93,9 @@ export const Legend = styled.li<ILegendProps>`
       height: 30px;
     }
   }
+`;
+
+export const ChartContainerLabel = styled.h2`
+  margin-left: 50px;
+  margin-top: 30px;
 `;

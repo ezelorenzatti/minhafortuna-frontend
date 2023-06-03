@@ -8,7 +8,8 @@ import formatCurrency from '../../utils/formatCurrency';
 interface IBarChartBoxProps {
     title: string;
     data: {
-        name: string;
+        currencyCode: string;
+        currencyName: string;
         amount: number;
         percent: number;
         color: string;
@@ -25,7 +26,7 @@ const BarChartBox: React.FC<IBarChartBoxProps> = ({title, data}) => (
                     data.map((indicator, index) => (
                         <Legend key={index} color={indicator.color}>
                             <div>{indicator.percent}%</div>
-                            <span>{indicator.name}</span>
+                            <span>{indicator.currencyCode} - {indicator.currencyName}</span>
                         </Legend>
                     ))
                 }

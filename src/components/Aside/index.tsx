@@ -63,11 +63,11 @@ const Aside: React.FC = () => {
             </MenuItemLink>
             <MenuItemLink href="/list/entry-balance">
                 <MdArrowUpward/>
-                Entradas
+                Compras
             </MenuItemLink>
             <MenuItemLink href="/list/exit-balance">
                 <MdArrowDownward/>
-                Saídas
+                Vendas
             </MenuItemLink>
             <MenuItemLink href="/profile">
                 <MdArrowDownward/>

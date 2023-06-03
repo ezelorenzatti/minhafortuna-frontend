@@ -7,8 +7,9 @@ import {useTheme} from "../../hooks/theme";
 import {useAuth} from "../../hooks/auth";
 
 const MainHeader: React.FC = () => {
-    const {toogleTheme, theme} = useTheme();
     const {loggedUser} = useAuth();
+    const {toogleTheme, theme} = useTheme();
+
 
     const [darkTheme, setDarkTheme] = useState(() =>
         theme.title === 'dark'

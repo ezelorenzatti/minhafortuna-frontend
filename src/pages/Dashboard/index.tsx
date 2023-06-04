@@ -1,6 +1,15 @@
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 
-import {Container, Content, CustomDatePicker, DateSelect, Label} from "./styles";
+import {
+    Container,
+    Content,
+    CustomDatePicker,
+    DateSelect,
+    Label,
+    PeriodFilter,
+    PeriodLabel,
+    PeriodSelector
+} from "./styles";
 import ContentHeader from "../../components/ContentHeader";
 import listOfMonths from "../../utils/months";
 
@@ -24,12 +33,15 @@ interface IOperations {
     date: string;
     operationType: string;
     plataformId: number;
+    plataformName: string;
     taxes: number;
     total: number;
     unitValue: number;
+    color: string;
 }
 
 const Dashboard: React.FC = () => {
+
     const [operations, setOperations] = useState<IOperations[]>([]);
     const [startDate, setStartDate] = useState(() => {
         let dateStorage = localStorage.getItem("@minha-carteira:startDate");
@@ -52,16 +64,16 @@ const Dashboard: React.FC = () => {
         return date;
     });
 
-    async function fetchOperations() {
+    const fetchOperations = useCallback(async () => {
         const formatStartDate = format(startDate, "yyyy-MM-dd");
         const formatEndDate = format(endDate, "yyyy-MM-dd");
         const operations: IOperations[] = await fetchGetData(`/operation?operationType=SELL&operationType=BUY&startDate=${formatStartDate}&endDate=${formatEndDate}`);
         setOperations(operations);
-    }
+    }, [startDate, endDate]);
 
     useEffect(() => {
         fetchOperations();
-    }, [])
+    }, [fetchOperations])
 
     const totalSell = useMemo(() => {
         let total: number = 0;
@@ -163,15 +175,15 @@ const Dashboard: React.FC = () => {
             }
         });
 
-        const colors = getRandomColors(currenciesMap.size);
         const percentual = Array.from(currenciesMap).map(([currencyCode, amount], index) => {
             const currencyName = operations.find((item) => item.currencyCode === currencyCode)?.currencyName;
+            const color = operations.find((item) => item.currencyCode === currencyCode)?.color;
             return {
                 currencyCode,
                 currencyName: currencyName || '',
                 amount,
                 percent: Number(((amount / total) * 100).toFixed(1)),
-                color: colors[index],
+                color: color || '',
             };
         });
 
@@ -193,50 +205,21 @@ const Dashboard: React.FC = () => {
             }
         });
 
-        const colors = getRandomColors(currenciesMap.size);
         const percentual = Array.from(currenciesMap).map(([currencyCode, amount], index) => {
             const currencyName = operations.find((item) => item.currencyCode === currencyCode)?.currencyName;
+            const color = operations.find((item) => item.currencyCode === currencyCode)?.color;
             return {
                 currencyCode,
                 currencyName: currencyName || '',
                 amount,
                 percent: Number(((amount / total) * 100).toFixed(1)),
-                color: colors[index],
+                color: color || '',
             };
         });
 
         return percentual;
     }, [operations]);
 
-    function getRandomColors(count: number): string[] {
-        const colors: string[] = [];
-        const usedColors: Set<string> = new Set();
-
-        for (let i = 0; i < count; i++) {
-            let color = generateRandomColor();
-
-            // Verifica se a cor já foi utilizada
-            while (usedColors.has(color)) {
-                color = generateRandomColor();
-            }
-
-            colors.push(color);
-            usedColors.add(color);
-        }
-
-        return colors;
-    }
-
-    function generateRandomColor(): string {
-        const letters = '0123456789ABCDEF';
-        let color = '#';
-
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
-        }
-
-        return color;
-    }
 
     const handleStartDate = useCallback((date: Date) => {
         localStorage.setItem("@minha-carteira:startDate", `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
@@ -251,18 +234,25 @@ const Dashboard: React.FC = () => {
     return (
         <Container>
             <ContentHeader title="Dashboard" lineColor="#F7931B">
-                <DateSelect>
-                    <Label>Início</Label>
-                    <CustomDatePicker locale="pt" selected={startDate}
-                                      onChange={(date: Date) => handleStartDate(date)}
-                                      dateFormat="dd/MM/yyyy"/>
-                </DateSelect>
-                <DateSelect>
-                    <Label>Fim</Label>
-                    <CustomDatePicker locale="pt" selected={endDate}
-                                      onChange={(date: Date) => handleEndDate(date)}
-                                      dateFormat="dd/MM/yyyy"/>
-                </DateSelect>
+                <PeriodFilter>
+                    <PeriodLabel>
+                        Filtrar Período
+                    </PeriodLabel>
+                    <PeriodSelector>
+                        <DateSelect>
+                            <Label>Início</Label>
+                            <CustomDatePicker locale="pt" selected={startDate}
+                                              onChange={(date: Date) => handleStartDate(date)}
+                                              dateFormat="dd/MM/yyyy"/>
+                        </DateSelect>
+                        <DateSelect>
+                            <Label>Fim</Label>
+                            <CustomDatePicker locale="pt" selected={endDate}
+                                              onChange={(date: Date) => handleEndDate(date)}
+                                              dateFormat="dd/MM/yyyy"/>
+                        </DateSelect>
+                    </PeriodSelector>
+                </PeriodFilter>
             </ContentHeader>
             <Content>
                 <WalletBox

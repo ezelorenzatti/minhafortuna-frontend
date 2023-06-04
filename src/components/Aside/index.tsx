@@ -1,7 +1,15 @@
 import React, {useState} from 'react';
 
 import Toggle from "../Toggle"
-import {MdArrowDownward, MdArrowUpward, MdClose, MdDashboard, MdExitToApp, MdMenu,} from 'react-icons/md';
+import {
+    MdArrowDownward,
+    MdArrowUpward,
+    MdClose,
+    MdDashboard,
+    MdExitToApp,
+    MdMenu,
+    MdVerifiedUser,
+} from 'react-icons/md';
 
 import logoImg from '../../assets/logo.svg';
 
@@ -61,16 +69,16 @@ const Aside: React.FC = () => {
                 <MdDashboard/>
                 Dashboard
             </MenuItemLink>
-            <MenuItemLink href="/list/entry-balance">
-                <MdArrowUpward/>
+            <MenuItemLink href="/list/buy">
+                <MdArrowDownward/>
                 Compras
             </MenuItemLink>
-            <MenuItemLink href="/list/exit-balance">
-                <MdArrowDownward/>
+            <MenuItemLink href="/list/sell">
+                <MdArrowUpward/>
                 Vendas
             </MenuItemLink>
             <MenuItemLink href="/profile">
-                <MdArrowDownward/>
+                <MdVerifiedUser/>
                 Meu Perfil
             </MenuItemLink>
             <MenuItemButton onClick={handleSignOut}>

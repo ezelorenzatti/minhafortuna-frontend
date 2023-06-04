@@ -64,3 +64,28 @@ export const CustomDatePicker = styled(DatePicker)`
     background-color: rgba(0, 0, 0, 0.1);
   }
 `;
+
+export const PeriodFilter = styled.div`
+  background-color: ${props => props.theme.colors.tertiary};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  margin-right: 10px;
+  border-radius: 8px;
+`;
+
+export const PeriodLabel = styled.h4`
+  width: 100%;
+  text-align: left;
+  margin-left: 10px;
+  margin-bottom: 5px;
+`;
+
+export const PeriodSelector = styled.div`
+  display: flex;
+`;
+
+
+
+

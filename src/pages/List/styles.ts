@@ -9,54 +9,13 @@ export const Container = styled.div`
 export const Content = styled.main`
 
 `;
-
-
-export const Filters = styled.div`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-
-  margin-bottom: 30px;
-
-  .tag-filter {
-    font-size: 18px;
-    font-weight: 500;
-
-    background: none;
-    color: ${props => props.theme.colors.white};
-
-    margin: 0 10px;
-
-    opacity: .4;
-    transition: opacity .3s;
-
-    &:hover {
-      opacity: .7;
-    }
-  }
-
-  .tag-filter-recurrent::after {
-    content: '';
-    display: block;
-    width: 55px;
-    margin: 0 auto;
-    border-bottom: 10px solid ${props => props.theme.colors.success};
-  }
-
-  .tag-filter-eventual::after {
-    content: '';
-    display: block;
-    width: 55px;
-    margin: 0 auto;
-    border-bottom: 10px solid ${props => props.theme.colors.warning};
-  }
-
-  .tag-actived {
-    opacity: 1;
-  }
+export const AddOperation = styled.div`
+  margin-top: 16px;
+  width: 200px;
 `;
 
 export const DateSelect = styled.div`
+  padding-right: 10px;
 
 `;
 export const Label = styled.label`
@@ -108,4 +67,25 @@ export const CustomDatePicker = styled(DatePicker)`
   .react-datepicker__day--keyboard-selected {
     background-color: rgba(0, 0, 0, 0.1);
   }
+`;
+
+export const PeriodFilter = styled.div`
+  background-color: ${props => props.theme.colors.tertiary};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 15px;
+  margin-right: 10px;
+  border-radius: 8px;
+`;
+
+export const PeriodLabel = styled.h4`
+  width: 100%;
+  text-align: left;
+  margin-left: 10px;
+  margin-bottom: 5px;
+`;
+
+export const PeriodSelector = styled.div`
+  display: flex;
 `;

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  height: 100vh;
+  height: 100vh - 72px;
   display: flex;
   flex: 1;
   flex-direction: column;
@@ -30,7 +30,7 @@ export const Logo = styled.div`
 
 export const Form = styled.form`
   width: 500px;
-  height: 435px;
+  height: 480px;
   
   padding: 30px;
   border-radius: 10px;

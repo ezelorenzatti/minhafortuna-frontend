@@ -1,5 +1,5 @@
 import React from 'react';
-import {Container} from './styled';
+import {Container} from './styles';
 
 interface ISelectInputProps {
     options: {
@@ -15,11 +15,11 @@ interface ISelectInputProps {
 const SelectInput: React.FC<ISelectInputProps> = ({options, onChange, defaultValue}) => {
     return (
         <Container>
-            <select onChange={onChange} defaultValue={defaultValue}>
+            <select onChange={onChange} value={defaultValue}>
                 {
-                    options.map(option => (
+                    options.map((option, key) => (
                         <option
-                            key={option.value}
+                            key={key}
                             value={option.value}>
                             {option.label}
                         </option>

@@ -4,6 +4,7 @@ import {Container, ErrorMessage, Form, FormTitle, SuccessMessage} from "./styles
 import Input from "../../components/Input";
 import Button from "../../components/Button";
 import {fetchGetData, fetchPostData} from "../../services/api/api";
+import {useNavigate} from "react-router-dom";
 
 interface IUserProfile {
     id: string;
@@ -15,6 +16,7 @@ interface IUserProfile {
 }
 
 const UserProfile: React.FC = () => {
+    const navigator = useNavigate();
     const [id, setId] = useState<string>('');
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
@@ -48,7 +50,7 @@ const UserProfile: React.FC = () => {
     }
 
     async function fetchProfile() {
-        const profile: IUserProfile = await fetchGetData("/usuario/profile");
+        const profile: IUserProfile = await fetchGetData("/user/profile");
         setId(profile.id);
         setName(profile.name);
         setPhone(profile.phone);
@@ -59,6 +61,9 @@ const UserProfile: React.FC = () => {
         fetchProfile();
     }, [])
 
+    const handleCancelClick = () => {
+        navigator(-1);
+    }
     return (
         <Container>
             <Form onSubmit={handleSubmit}>
@@ -103,6 +108,7 @@ const UserProfile: React.FC = () => {
                 />
 
                 <Button type="submit">Salvar</Button>
+                <Button type="button" onClick={handleCancelClick}>Cancelar</Button>
             </Form>
 
             {error &&

@@ -34,7 +34,7 @@ interface Props {
 
 const ThemeProvider: React.FC<Props> = ({children}) => {
     const [theme, setTheme] = useState<ITheme>(() => {
-        const themeSaved = localStorage.getItem('@minha-carteira:theme');
+        const themeSaved = localStorage.getItem('@minha-fortuna:theme');
         if (themeSaved) {
             return JSON.parse(themeSaved);
         } else {
@@ -44,10 +44,10 @@ const ThemeProvider: React.FC<Props> = ({children}) => {
     const toogleTheme = () => {
         if (theme.title === 'dark') {
             setTheme(light);
-            localStorage.setItem('@minha-carteira:theme', JSON.stringify(light));
+            localStorage.setItem('@minha-fortuna:theme', JSON.stringify(light));
         } else {
             setTheme(dark);
-            localStorage.setItem('@minha-carteira:theme', JSON.stringify(dark));
+            localStorage.setItem('@minha-fortuna:theme', JSON.stringify(dark));
         }
     };
 

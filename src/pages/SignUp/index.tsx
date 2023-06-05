@@ -64,8 +64,8 @@ const SignUp: React.FC = () => {
     return (
         <Container>
             <Logo>
-                <img src={logoImg} alt="Minha Carteira"/>
-                <h2>Minha Carteira</h2>
+                <img src={logoImg} alt="Minha Fortuna"/>
+                <h2>Minha Fortuna</h2>
             </Logo>
             {!finishSignUp &&
                 <Form onSubmit={handleSubmit}>

@@ -63,8 +63,8 @@ const Aside: React.FC = () => {
             <ToggleMenu>
                 {toggleMenuIsOpened ? <MdClose onClick={handleToggleMenu}/> : <MdMenu onClick={handleToggleMenu}/>}
             </ToggleMenu>
-            <LogImg src={logoImg} alt="Logo Minha Carteira"/>
-            <Title>Minha Carteira</Title>
+            <LogImg src={logoImg} alt="Logo Minha Fortuna"/>
+            <Title>Minha Fortuna</Title>
         </Header>
         <MenuContainer>
             <MenuItemLink href="/">

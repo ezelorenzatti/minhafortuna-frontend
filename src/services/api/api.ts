@@ -12,7 +12,7 @@ export const parseError = (error: any): any => {
 
 export const fetchPostData = async (path: string, data?: any) => {
     try {
-        const token = sessionStorage.getItem('@minha-carteira:token');
+        const token = sessionStorage.getItem('@minha-fortuna:token');
         const response = await axios.post(`${API_URL}${path}`, data, {
             headers: {
                 Authorization: token
@@ -26,7 +26,7 @@ export const fetchPostData = async (path: string, data?: any) => {
 
 export const fetchGetData = async (path: string) => {
     try {
-        const token = sessionStorage.getItem('@minha-carteira:token');
+        const token = sessionStorage.getItem('@minha-fortuna:token');
         const response = await axios.get(`${API_URL}${path}`, {
             headers: {
                 Authorization: token

@@ -46,7 +46,7 @@ const Dashboard: React.FC = () => {
     const navigator = useNavigate();
     const [operations, setOperations] = useState<IOperations[]>([]);
     const [startDate, setStartDate] = useState(() => {
-        let dateStorage = localStorage.getItem("@minha-carteira:startDate");
+        let dateStorage = localStorage.getItem("@minha-fortuna:startDate");
         let date = new Date();
         if (dateStorage) {
             const splitDate = dateStorage.split("-");
@@ -57,7 +57,7 @@ const Dashboard: React.FC = () => {
         return date;
     });
     const [endDate, setEndDate] = useState(() => {
-        let dateStorage = localStorage.getItem("@minha-carteira:endDate");
+        let dateStorage = localStorage.getItem("@minha-fortuna:endDate");
         let date = new Date();
         if (dateStorage) {
             const splitDate = dateStorage.split("-");
@@ -232,12 +232,12 @@ const Dashboard: React.FC = () => {
 
 
     const handleStartDate = useCallback((date: Date) => {
-        localStorage.setItem("@minha-carteira:startDate", `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
+        localStorage.setItem("@minha-fortuna:startDate", `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
         setStartDate(date);
     }, []);
 
     const handleEndDate = useCallback((date: Date) => {
-        localStorage.setItem("@minha-carteira:endDate", `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
+        localStorage.setItem("@minha-fortuna:endDate", `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
         setEndDate(date);
     }, []);
 

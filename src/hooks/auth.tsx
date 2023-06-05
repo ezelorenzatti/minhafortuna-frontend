@@ -26,18 +26,18 @@ const AuthProvider: React.FC<Props> = ({children}) => {
 
     const [loggedUser, setLoggedUser] = useState<string>(
         () => {
-            const loggedUser = sessionStorage.getItem('@minha-carteira:loggedUser') || '';
+            const loggedUser = sessionStorage.getItem('@minha-fortuna:loggedUser') || '';
             return loggedUser;
         }
     );
     const [logged, setLogged]
         = useState<boolean>(() => {
-        const isLogged = sessionStorage.getItem('@minha-carteira:logged');
+        const isLogged = sessionStorage.getItem('@minha-fortuna:logged');
         return !!isLogged;
     });
     const [token, setToken]
         = useState<string>(() => {
-        const token = sessionStorage.getItem('@minha-carteira:token') || '';
+        const token = sessionStorage.getItem('@minha-fortuna:token') || '';
         return token;
     });
 
@@ -50,9 +50,9 @@ const AuthProvider: React.FC<Props> = ({children}) => {
             })
             const token = response.token;
             const loggedUser = JSON.parse(atob(token.split('.')[1])).name;
-            sessionStorage.setItem('@minha-carteira:token', token);
-            sessionStorage.setItem('@minha-carteira:logged', 'true');
-            sessionStorage.setItem('@minha-carteira:loggedUser', loggedUser);
+            sessionStorage.setItem('@minha-fortuna:token', token);
+            sessionStorage.setItem('@minha-fortuna:logged', 'true');
+            sessionStorage.setItem('@minha-fortuna:loggedUser', loggedUser);
             setToken(token);
             setLogged(true);
             setLoggedUser(loggedUser);
@@ -71,8 +71,8 @@ const AuthProvider: React.FC<Props> = ({children}) => {
             })
             const token = response.token;
             const loggedUser = JSON.parse(atob(token.split('.')[1])).name;
-            sessionStorage.setItem('@minha-carteira:token', token);
-            sessionStorage.setItem('@minha-carteira:loggedUser', loggedUser);
+            sessionStorage.setItem('@minha-fortuna:token', token);
+            sessionStorage.setItem('@minha-fortuna:loggedUser', loggedUser);
             setToken(token);
             setLoggedUser(loggedUser);
         } catch (error: any) {
@@ -81,9 +81,9 @@ const AuthProvider: React.FC<Props> = ({children}) => {
     }
 
     const signOut = () => {
-        sessionStorage.removeItem('@minha-carteira:logged');
-        sessionStorage.removeItem('@minha-carteira:token');
-        sessionStorage.removeItem('@minha-carteira:loggedUser');
+        sessionStorage.removeItem('@minha-fortuna:logged');
+        sessionStorage.removeItem('@minha-fortuna:token');
+        sessionStorage.removeItem('@minha-fortuna:loggedUser');
         setToken('');
         setLogged(false)
         setLoggedUser('');

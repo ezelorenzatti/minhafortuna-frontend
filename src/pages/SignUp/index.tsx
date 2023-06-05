@@ -1,5 +1,15 @@
 import React, {useState} from "react";
-import {Container, ErrorMessage, ExampleData, ExampleDataTitle, Form, FormTitle, Logo, Message} from "./styles";
+import {
+    BarLoaderCustom,
+    Container,
+    ErrorMessage,
+    ExampleData,
+    ExampleDataTitle,
+    Form,
+    FormTitle,
+    Logo,
+    Message
+} from "./styles";
 
 import logoImg from "../../assets/logo.svg";
 import Input from "../../components/Input";
@@ -7,9 +17,12 @@ import Button from "../../components/Button";
 
 import {useAuth} from '../../hooks/auth';
 import {useNavigate} from "react-router-dom";
+import {BarLoader} from "react-spinners";
 
 const SignUp: React.FC = () => {
     const [finishSignUp, setFinishSignUp] = useState<boolean>(false);
+    const [waitProcess, setWaitProcess] = useState<boolean>(false);
+
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
@@ -36,6 +49,7 @@ const SignUp: React.FC = () => {
 
     const handleCreateSimulateData = async (e: any) => {
         e.preventDefault();
+        setWaitProcess(true);
         await signIn(email, password, true);
         navigate('/');
     }
@@ -105,8 +119,15 @@ const SignUp: React.FC = () => {
                     <Message>
                         Você poderá remover sua conta a qualquer momento!
                     </Message>
+
+                    {waitProcess &&
+                        <BarLoaderCustom>
+                            <BarLoader color={"red"}/>
+                        </BarLoaderCustom>
+                    }
                 </ExampleData>
             }
+
 
             {error &&
                 <ErrorMessage>

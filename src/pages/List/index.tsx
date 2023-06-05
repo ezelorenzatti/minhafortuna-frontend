@@ -81,7 +81,7 @@ const List: React.FC = () => {
                 navigator('/')
             }
         }
-    }, [movimentType, startDate, endDate]);
+    }, [movimentType, startDate, endDate, signOut, navigator]);
 
     const handleDeleteOperation = async (id: number) => {
         try {

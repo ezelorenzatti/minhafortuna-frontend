@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {
     Container,
     CustomDatePicker,
@@ -125,7 +125,7 @@ const Operation: React.FC = () => {
         setExchangeId(event.target.value)
     }
 
-    async function fetchOperation({id}: { id: any }) {
+    const fetchOperation = useCallback(async ({id}: { id: any }) => {
         try {
             const currencies: ICurrency[] = await fetchGetData("/currency");
             setCurrrencies(currencies);
@@ -151,12 +151,11 @@ const Operation: React.FC = () => {
                 navigator('/')
             }
         }
-
-    }
+    }, [signOut, navigator]);
 
     useEffect(() => {
         fetchOperation({id: id});
-    }, [id])
+    }, [id, fetchOperation])
 
     return (
         <Container>

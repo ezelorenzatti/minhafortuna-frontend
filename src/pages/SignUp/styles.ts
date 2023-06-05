@@ -89,6 +89,13 @@ export const Message = styled.h4`
   
 `;
 
+export const BarLoaderCustom = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 
 
 

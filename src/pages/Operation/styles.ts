@@ -16,7 +16,6 @@ export const Container = styled.div`
 
 export const Form = styled.form`
   width: 500px;
-  height: 650px;
   
   padding: 30px;
   border-radius: 10px;
@@ -59,12 +58,14 @@ export const SuccessMessage = styled.div`
 export const DateSelect = styled.div`
   width: 100%;
   padding-bottom: 5px;
+  padding-top: 5px;
 `;
-export const Label = styled.label`
-  width: 100px;
+export const FormItem = styled.label`
+  padding-top: 5px;
+  display: flex;
+  flex-direction: column;
   font-size: 20px;
   vertical-align: center;
-  padding-left: 5px;
 `;
 
 export const CustomDatePicker = styled(DatePicker)`
@@ -114,6 +115,7 @@ export const CustomDatePicker = styled(DatePicker)`
 `;
 export const OperationSelectInput = styled.div`
   height: 55px;
+  padding-top: 5px;
   
   > div select {
     width: 100%;
@@ -123,3 +125,4 @@ export const OperationSelectInput = styled.div`
     padding-bottom: 16px;
   }
 `;
+

@@ -10,10 +10,18 @@ export const Container = styled.button`
   font-weight: bold;
   color: ${props => props.theme.colors.white};
   background-color: ${props => props.theme.colors.warning};
+  
+  &.btn-disabled {
+    background-color: ${props => props.theme.colors.gray};
+    opacity: .7;
+  }
+  
+  
 
   transition: opacity .3s;
 
   &:hover {
     opacity: .7;
   }
+  
 `;

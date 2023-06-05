@@ -11,26 +11,8 @@ export const Container = styled.div`
   background-color: ${props => props.theme.colors.primary};
 `;
 
-export const Logo = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 30px;
-
-  > h2 {
-    color: ${props => props.theme.colors.white};
-    margin-left: 7px;
-  }
-
-  > img {
-    width: 40px;
-    height: 40px;
-  }
-
-`;
-
 export const Form = styled.form`
   width: 500px;
-  height: 480px;
   
   padding: 30px;
   border-radius: 10px;
@@ -68,4 +50,12 @@ export const SuccessMessage = styled.div`
   color: #ff0000;
   padding: 10px;
   margin-bottom: 10px;
+`;
+
+export const FormItem = styled.label`
+  padding-top: 5px;
+  display: flex;
+  flex-direction: column;
+  font-size: 20px;
+  vertical-align: center;
 `;

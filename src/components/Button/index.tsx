@@ -5,7 +5,7 @@ import {Container} from './styles';
 type IInputProps = ButtonHTMLAttributes<HTMLButtonElement>;
 
 const Button: React.FC<IInputProps> = ({children, ...rest}) => (
-    <Container{...rest}>
+    <Container{...rest} >
         {children}
     </Container>
 )

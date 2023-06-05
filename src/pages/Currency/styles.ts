@@ -1,36 +1,21 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  height: 100vh;
+  height: 100vh - 72px;
   display: flex;
   flex: 1;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  
+
   background-color: ${props => props.theme.colors.primary};
-`;
-
-export const Logo = styled.div`
-  display: flex;
-  align-items: center;
-  margin-bottom: 30px;
-
-  > h2 {
-    color: ${props => props.theme.colors.white};
-    margin-left: 7px;
-  }
-
-  > img {
-    width: 40px;
-    height: 40px;
-  }
-
+  overflow-x: hidden;
+  overflow-y: hidden;
 `;
 
 export const Form = styled.form`
-  width: 300px;
-  
+  width: 500px;
+
   padding: 30px;
   border-radius: 10px;
 
@@ -40,7 +25,7 @@ export const Form = styled.form`
 export const FormTitle = styled.h1`
   margin-bottom: 35px;
   color: ${props => props.theme.colors.white};
-  
+
   &:after {
     content: '';
     display: block;
@@ -57,4 +42,21 @@ export const ErrorMessage = styled.div`
   color: #ff0000;
   padding: 10px;
   margin-bottom: 10px;
+`;
+
+export const DateSelect = styled.div`
+  width: 100%;
+  padding-bottom: 5px;
+`;
+export const FormItem = styled.label`
+  width: 100px;
+  font-size: 20px;
+  vertical-align: center;
+  padding-left: 5px;
+
+  > div Input {
+    height: 80px;
+    width: 100%;
+    padding-top: -10px;
+  }
 `;

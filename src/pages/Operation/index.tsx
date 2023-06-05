@@ -1,5 +1,14 @@
 import React, {useEffect, useMemo, useState} from "react";
-import {Container, CustomDatePicker, DateSelect, ErrorMessage, Form, FormTitle, OperationSelectInput} from "./styles";
+import {
+    Container,
+    CustomDatePicker,
+    DateSelect,
+    ErrorMessage,
+    Form,
+    FormItem,
+    FormTitle,
+    OperationSelectInput
+} from "./styles";
 
 import Input from "../../components/Input";
 import Button from "../../components/Button";
@@ -7,6 +16,7 @@ import {fetchGetData, fetchPostData} from "../../services/api/api";
 import {useNavigate, useParams} from "react-router-dom";
 import SelectInput from "../../components/SelectInput";
 import {dateToString, stringToDate} from "../../utils/formatDate";
+import formatCurrency from "../../utils/formatCurrency";
 
 interface IOperation {
     id: number;
@@ -15,9 +25,8 @@ interface IOperation {
     currencyName: string;
     date: string;
     operationType: string;
-    plataformId: number;
-    plataformName: string;
-    taxes: number;
+    exchangeId: number;
+    exchangeName: string;
     total: number;
     unitValue: number;
 }
@@ -28,7 +37,7 @@ interface ICurrency {
     custom: boolean;
 }
 
-interface IPlataform {
+interface IExchange {
     id: number;
     name: string;
 }
@@ -38,7 +47,7 @@ const Operation: React.FC = () => {
     const {type: movimentType, id} = useParams();
 
     const [currencies, setCurrrencies] = useState<ICurrency[]>([]);
-    const [plataforms, setPlataforms] = useState<IPlataform[]>([]);
+    const [exchanges, setExchanges] = useState<IExchange[]>([]);
 
     const currencySelector: any[] = useMemo(() => {
         const currenciesSelector = currencies.map(currency => {
@@ -47,21 +56,21 @@ const Operation: React.FC = () => {
         return currenciesSelector;
     }, [currencies]);
 
-    const plataformsSelector: any[] = useMemo(() => {
-        const plataformsSelector = plataforms.map(plataform => {
-            return {value: String(plataform.id), label: plataform.name}
+    const exchangeSelector: any[] = useMemo(() => {
+        const exchangeSelector = exchanges.map(exchange => {
+            return {value: String(exchange.id), label: exchange.name}
         })
-        return plataformsSelector;
-    }, [plataforms]);
+        return exchangeSelector;
+    }, [exchanges]);
 
     const [idOperation, setIdOperation] = useState<number>();
     const [amount, setAmount] = useState<string>('');
     const [currencyCode, setCurrencyCode] = useState<string>();
-    const [date, setDate] = useState<Date>(new Date());
+    const [date, setDate] = useState<Date | undefined>(new Date());
     const [operationType, setOperationType] = useState<string>((movimentType || '').toUpperCase());
-    const [plataformId, setPlataformId] = useState<string>();
-    const [taxes, setTaxes] = useState<string>('');
+    const [exchangeId, setExchangeId] = useState<string>();
     const [total, setTotal] = useState<string>('');
+    const [totalFormatted, setTotalFormated] = useState<string>('');
     const [unitValue, setUnitValue] = useState<string>('');
 
     const [error, setError] = useState<string>('');
@@ -69,15 +78,18 @@ const Operation: React.FC = () => {
     const handleSubmit = async (e: any) => {
         e.preventDefault();
         try {
-            console.log(dateToString(date));
+            if (!currencyCode || !exchangeId || !amount || !total || !unitValue) {
+                setError("Campos obrigatórios não preenchidos!")
+                return;
+            }
+
             await fetchPostData("/operation", {
                 id: idOperation,
                 amount: amount,
                 currencyCode: currencyCode,
                 date: dateToString(date),
                 operationType: operationType,
-                plataformId: plataformId,
-                taxes: taxes,
+                exchangeId: exchangeId,
                 total: total,
                 unitValue: unitValue,
             });
@@ -94,27 +106,29 @@ const Operation: React.FC = () => {
         setUnitValue(event.target.value);
         const total = Number(event.target.value) * Number(amount);
         setTotal(String(total));
+        setTotalFormated(formatCurrency(total));
 
     }
     const handleAmountValue = (event: React.ChangeEvent<HTMLInputElement>) => {
         setAmount(event.target.value);
         const total = Number(event.target.value) * Number(unitValue);
         setTotal(String(total));
+        setTotalFormated(formatCurrency(total));
     }
     const handleCurrencyChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setCurrencyCode(event.target.value);
     }
 
-    const handlePlataformChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        setPlataformId(event.target.value)
+    const handleExchangeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        setExchangeId(event.target.value)
     }
 
     async function fetchOperation({id}: { id: any }) {
         const currencies: ICurrency[] = await fetchGetData("/currency");
         setCurrrencies(currencies);
 
-        const plataforms: IPlataform[] = await fetchGetData("/plataform");
-        setPlataforms(plataforms);
+        const exchanges: IExchange[] = await fetchGetData("/exchange");
+        setExchanges(exchanges);
 
         if (id) {
             const operation: IOperation = await fetchGetData("/operation/" + id);
@@ -122,14 +136,11 @@ const Operation: React.FC = () => {
             setDate(stringToDate(operation.date));
             setAmount(String(operation.amount));
             setOperationType(operation.operationType)
-            setTaxes(String(operation.taxes));
             setCurrencyCode(operation.currencyCode);
-            setPlataformId(String(operation.plataformId));
+            setExchangeId(String(operation.exchangeId));
             setUnitValue(String(operation.unitValue));
             setTotal(String(operation.total));
-        } else {
-            setPlataformId(String(plataforms[0].id))
-            setCurrencyCode('USD');
+            setTotalFormated(formatCurrency(operation.total));
         }
     }
 
@@ -143,56 +154,61 @@ const Operation: React.FC = () => {
                 <FormTitle>
                     {id ? 'Editar' : 'Adicionar'} {movimentType === 'buy' ? 'Compra' : 'Venda'}
                 </FormTitle>
-                <small>Plataforma</small>
-                <OperationSelectInput>
-                    <SelectInput
-                        onChange={handlePlataformChange}
-                        options={plataformsSelector}
-                        defaultValue={plataformId}
+                <FormItem>
+                    <small>Exchange</small>
+                    <OperationSelectInput>
+                        <SelectInput
+                            onChange={handleExchangeChange}
+                            options={exchangeSelector}
+                            defaultValue={exchangeId}
+                        />
+                    </OperationSelectInput>
+                </FormItem>
+                <FormItem>
+                    <small>Moeda</small>
+                    <OperationSelectInput>
+                        <SelectInput
+                            onChange={handleCurrencyChange}
+                            options={currencySelector}
+                            defaultValue={currencyCode}
+                        />
+                    </OperationSelectInput>
+                </FormItem>
+
+                <FormItem>
+                    <small>Data de Operação</small>
+                    <DateSelect>
+                        <CustomDatePicker locale="pt" selected={date}
+                                          onChange={(date: Date) => setDate(date)}
+                                          dateFormat="dd/MM/yyyy" placeholderText="data da operação"/>
+                    </DateSelect>
+                </FormItem>
+                <FormItem>
+                    <small>Quantidade</small>
+                    <Input
+                        placeholder="quantidade"
+                        type="text"
+                        required
+                        defaultValue={amount}
+                        onChange={handleAmountValue}
+                        onFocus={(e) => setError('')}
                     />
-                </OperationSelectInput>
-                <small>Moeda</small>
-                <OperationSelectInput>
-                    <SelectInput
-                        onChange={handleCurrencyChange}
-                        options={currencySelector}
-                        defaultValue={currencyCode}
+                </FormItem>
+                <FormItem>
+                    <small>Valor Unitário</small>
+                    <Input
+                        placeholder="valor unitário"
+                        type="text"
+                        required
+                        defaultValue={unitValue}
+                        onChange={handleUnitValue}
+                        onFocus={(e) => setError('')}
                     />
-                </OperationSelectInput>
-                <small>Data de Operação</small>
-                <DateSelect>
-                    <CustomDatePicker locale="pt" selected={date}
-                                      onChange={(date: Date) => setDate(date)}
-                                      dateFormat="dd/MM/yyyy" placeholderText="data da operação"/>
-                </DateSelect>
-                <small>Quantidade</small>
-                <Input
-                    placeholder="quantidade"
-                    type="text"
-                    required
-                    defaultValue={amount}
-                    onChange={handleAmountValue}
-                    onFocus={(e) => setError('')}
-                />
-                <small>Valor Unitário</small>
-                <Input
-                    placeholder="valor unitário"
-                    type="text"
-                    required
-                    defaultValue={unitValue}
-                    onChange={handleUnitValue}
-                    onFocus={(e) => setError('')}
-                />
-                <small>Valor Total</small>
-                <Input
-                    placeholder="valor total"
-                    disabled
-                    type="text"
-                    required
-                    defaultValue={total}
-                    onChange={(e) => setTotal(e.target.value)}
-                    onFocus={(e) => setError('')}
-                />
+                </FormItem>
+                <FormItem>
+                    <small>Valor Total</small>
+                    {totalFormatted}
+                </FormItem>
                 <Button type="submit">Salvar</Button>
                 <Button type="button" onClick={handleCancelClick}>Cancelar</Button>
             </Form>

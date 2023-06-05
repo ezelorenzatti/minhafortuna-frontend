@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Container, ErrorMessage, Form, FormTitle, SuccessMessage} from "./styles";
+import {Container, ErrorMessage, Form, FormItem, FormTitle, SuccessMessage} from "./styles";
 
 import Input from "../../components/Input";
 import Button from "../../components/Button";
@@ -70,42 +70,57 @@ const UserProfile: React.FC = () => {
                 <FormTitle>
                     Meu Perfil
                 </FormTitle>
-                <Input
-                    placeholder="nome"
-                    type="text"
-                    required
-                    defaultValue={name}
-                    onChange={(e) => setName(e.target.value)}
-                    onFocus={(e) => setError('')}
-                />
+                <FormItem>
+                    <small>Nome</small>
+                    <Input
+                        placeholder="nome"
+                        type="text"
+                        required
+                        defaultValue={name}
+                        onChange={(e) => setName(e.target.value)}
+                        onFocus={(e) => setError('')}
+                    />
+                </FormItem>
+                <FormItem>
+                    <small>E-mail</small>
+                    <Input
+                        placeholder="e-mail"
+                        type="email"
+                        required
+                        defaultValue={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        onFocus={(e) => setError('')}
+                    />
+                </FormItem>
+                <FormItem>
+                    <small>Fone</small>
+                    <Input
+                        placeholder="fone"
+                        type="text"
+                        defaultValue={phone}
+                        onChange={(e) => setPhone(e.target.value)}
+                        onFocus={(e) => setError('')}
+                    />
+                </FormItem>
+                <FormItem>
+                    <small>Senha</small>
+                    <Input
+                        placeholder="senha"
+                        type="password"
+                        onChange={(e) => setPassword(e.target.value)}
+                        onFocus={(e) => setError('')}
+                    />
+                </FormItem>
+                <FormItem>
+                    <small>Confirmar senha</small>
+                    <Input
+                        placeholder="confirmar senha"
+                        type="password"
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        onFocus={(e) => setError('')}
+                    />
+                </FormItem>
 
-                <Input
-                    placeholder="e-mail"
-                    type="email"
-                    required
-                    defaultValue={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    onFocus={(e) => setError('')}
-                />
-                <Input
-                    placeholder="fone"
-                    type="text"
-                    defaultValue={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    onFocus={(e) => setError('')}
-                />
-                <Input
-                    placeholder="senha"
-                    type="password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    onFocus={(e) => setError('')}
-                />
-                <Input
-                    placeholder="confirmar senha"
-                    type="password"
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    onFocus={(e) => setError('')}
-                />
 
                 <Button type="submit">Salvar</Button>
                 <Button type="button" onClick={handleCancelClick}>Cancelar</Button>

@@ -1,4 +1,7 @@
-const formatCurrency = (current: number): string => {
+const formatCurrency = (current: number | undefined): string => {
+    if (!current) {
+        return "";
+    }
     return current.toLocaleString(
         'pt-br',
         {

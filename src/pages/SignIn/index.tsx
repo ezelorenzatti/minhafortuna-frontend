@@ -21,14 +21,14 @@ const SignIn: React.FC = () => {
         e.preventDefault();
         try {
             await signIn(email, password);
-        } catch (message: any) {
-            setError(message);
+        } catch (error: any) {
+            setError(error.message);
         }
     }
 
     const handleSignUp = async (e: any) => {
         e.preventDefault();
-        navigate("/signUp");
+        navigate("/signup");
     }
 
     return (

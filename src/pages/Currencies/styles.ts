@@ -9,7 +9,7 @@ export const Container = styled.div`
 export const Content = styled.main`
 
 `;
-export const AddOperation = styled.div`
+export const Add = styled.div`
   margin-top: 16px;
   width: 200px;
 `;

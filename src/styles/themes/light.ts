@@ -7,7 +7,7 @@ const light = {
 
         white: '#000',
         black: '#FFF',
-        gray: '##BFBFBF',
+        gray: '#BFBFBF',
 
         success: '#03BB85',
         info: '#3B5998',

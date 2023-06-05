@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Container, ErrorMessage, Form, FormTitle, Logo} from "./styles";
+import {Container, ErrorMessage, ExampleData, ExampleDataTitle, Form, FormTitle, Logo, Message} from "./styles";
 
 import logoImg from "../../assets/logo.svg";
 import Input from "../../components/Input";
@@ -9,13 +9,14 @@ import {useAuth} from '../../hooks/auth';
 import {useNavigate} from "react-router-dom";
 
 const SignUp: React.FC = () => {
+    const [finishSignUp, setFinishSignUp] = useState<boolean>(false);
     const [name, setName] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [confirmPassword, setConfirmPassword] = useState<string>('');
     const [error, setError] = useState<string>('');
 
-    const {signUp} = useAuth();
+    const {signUp, signIn} = useAuth();
 
     const navigate = useNavigate();
 
@@ -23,14 +24,28 @@ const SignUp: React.FC = () => {
         e.preventDefault();
         try {
             await signUp(name, email, password, confirmPassword);
-        } catch (message: any) {
-            setError(message);
+            setFinishSignUp(true);
+        } catch (error: any) {
+            setError(error.message);
         }
     }
     const handleBack = async (e: any) => {
         e.preventDefault();
+        navigate(-1);
+    }
+
+    const handleCreateSimulateData = async (e: any) => {
+        e.preventDefault();
+        await signIn(email, password, true);
         navigate('/');
     }
+
+    const handleCreateWithOutSimulateData = async (e: any) => {
+        e.preventDefault();
+        await signIn(email, password, false);
+        navigate('/');
+    }
+
 
     return (
         <Container>
@@ -38,44 +53,60 @@ const SignUp: React.FC = () => {
                 <img src={logoImg} alt="Minha Carteira"/>
                 <h2>Minha Carteira</h2>
             </Logo>
-            <Form onSubmit={handleSubmit}>
-                <FormTitle>
-                    Cadastre-se
-                </FormTitle>
+            {!finishSignUp &&
+                <Form onSubmit={handleSubmit}>
+                    <FormTitle>
+                        Cadastre-se
+                    </FormTitle>
 
-                <Input
-                    placeholder="nome"
-                    type="text"
-                    required
-                    onChange={(e) => setName(e.target.value)}
-                    onFocus={(e) => setError('')}
-                />
+                    <Input
+                        placeholder="nome"
+                        type="text"
+                        required
+                        onChange={(e) => setName(e.target.value)}
+                        onFocus={(e) => setError('')}
+                    />
 
-                <Input
-                    placeholder="e-mail"
-                    type="email"
-                    required
-                    onChange={(e) => setEmail(e.target.value)}
-                    onFocus={(e) => setError('')}
-                />
-                <Input
-                    placeholder="senha"
-                    type="password"
-                    required
-                    onChange={(e) => setPassword(e.target.value)}
-                    onFocus={(e) => setError('')}
-                />
-                <Input
-                    placeholder="confirmar senha"
-                    type="password"
-                    required
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    onFocus={(e) => setError('')}
-                />
+                    <Input
+                        placeholder="e-mail"
+                        type="email"
+                        required
+                        onChange={(e) => setEmail(e.target.value)}
+                        onFocus={(e) => setError('')}
+                    />
+                    <Input
+                        placeholder="senha"
+                        type="password"
+                        required
+                        onChange={(e) => setPassword(e.target.value)}
+                        onFocus={(e) => setError('')}
+                    />
+                    <Input
+                        placeholder="confirmar senha"
+                        type="password"
+                        required
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        onFocus={(e) => setError('')}
+                    />
 
-                <Button type="submit">Cadastrar</Button>
-                <Button type="button" onClick={handleBack}>Voltar</Button>
-            </Form>
+                    <Button type="submit">Cadastrar</Button>
+                    <Button type="button" onClick={handleBack}>Voltar</Button>
+                </Form>
+            }
+
+            {
+                finishSignUp &&
+                <ExampleData>
+                    <ExampleDataTitle>
+                        Deseja iniciar com dados simulados ?
+                    </ExampleDataTitle>
+                    <Button onClick={handleCreateSimulateData}>Sim, Criar dados simulados!</Button>
+                    <Button onClick={handleCreateWithOutSimulateData}>Não, Continuar sem dados!</Button>
+                    <Message>
+                        Você poderá remover sua conta a qualquer momento!
+                    </Message>
+                </ExampleData>
+            }
 
             {error &&
                 <ErrorMessage>

@@ -18,9 +18,8 @@ interface IOperation {
     currencyName: string;
     date: string;
     operationType: string;
-    plataformId: number;
-    plataformName: string;
-    taxes: number;
+    exchangeId: number;
+    exchangeName: string;
     total: number;
     unitValue: number;
     amountFormatted: string,
@@ -84,6 +83,16 @@ const List: React.FC = () => {
         }
     };
 
+    const handleStartDate = useCallback((date: Date) => {
+        localStorage.setItem("@minha-carteira:startDate", `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
+        setStartDate(date);
+    }, []);
+
+    const handleEndDate = useCallback((date: Date) => {
+        localStorage.setItem("@minha-carteira:endDate", `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`);
+        setEndDate(date);
+    }, []);
+
     useEffect(() => {
         fetchOperations();
     }, [fetchOperations])
@@ -117,9 +126,8 @@ const List: React.FC = () => {
             lastValueFormatted: formatCurrency(item.lastValue),
             date: item.date,
             amount: item.amount,
-            plataformId: item.plataformId,
-            plataformName: item.plataformName,
-            taxes: item.taxes,
+            exchangeId: item.exchangeId,
+            exchangeName: item.exchangeName,
             total: item.total,
             unitValue: formatCurrency(item.unitValue),
             tagColor: item.color
@@ -137,13 +145,13 @@ const List: React.FC = () => {
                         <DateSelect>
                             <Label>Início</Label>
                             <CustomDatePicker locale="pt" selected={startDate}
-                                              onChange={(date: Date) => setStartDate(date)}
+                                              onChange={handleStartDate}
                                               dateFormat="dd/MM/yyyy"/>
                         </DateSelect>
                         <DateSelect>
                             <Label>Fim</Label>
                             <CustomDatePicker locale="pt" selected={endDate}
-                                              onChange={(date: Date) => setEndDate(date)}
+                                              onChange={handleEndDate}
                                               dateFormat="dd/MM/yyyy"/>
                         </DateSelect>
                     </PeriodSelector>
@@ -168,7 +176,7 @@ const List: React.FC = () => {
                             total={item.totalFormatted}
                             lastValue={item.lastValueFormatted}
                             lastValueDate={item.lastValueDateFormatted}
-                            plataformName={item.plataformName}
+                            exchangeName={item.exchangeName}
                             unitValue={item.unitValue}
                             operationType={item.operationType}
                             deleteMessage={"Ao remover todos os indicadores serão recalculados, Confirma ?"}
@@ -176,6 +184,9 @@ const List: React.FC = () => {
                             handleDeleteClick={handleDeleteOperation}
                         />
                     ))
+                }
+                {
+                    formattedData.length === 0 && (<div>Não foram encontradas movimentações no período</div>)
                 }
             </Content>
         </Container>

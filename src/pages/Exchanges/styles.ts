@@ -9,7 +9,7 @@ export const Container = styled.div`
 export const Content = styled.main`
 
 `;
-export const AddOperation = styled.div`
+export const Add = styled.div`
   margin-top: 16px;
   width: 200px;
 `;
@@ -67,14 +67,4 @@ export const CustomDatePicker = styled(DatePicker)`
   .react-datepicker__day--keyboard-selected {
     background-color: rgba(0, 0, 0, 0.1);
   }
-`;
-
-export const PeriodFilter = styled.div`
-  background-color: ${props => props.theme.colors.tertiary};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 15px;
-  margin-right: 10px;
-  border-radius: 8px;
 `;

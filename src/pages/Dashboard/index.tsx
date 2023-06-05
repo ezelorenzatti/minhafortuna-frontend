@@ -22,6 +22,8 @@ import pt from 'date-fns/locale/pt-BR';
 import {registerLocale, setDefaultLocale} from "react-datepicker";
 import {fetchGetData} from "../../services/api/api";
 import {format} from "date-fns";
+import {useAuth} from "../../hooks/auth";
+import {useNavigate} from "react-router-dom";
 
 registerLocale('pt', pt);
 setDefaultLocale('pt');
@@ -34,14 +36,14 @@ interface IOperations {
     operationType: string;
     plataformId: number;
     plataformName: string;
-    taxes: number;
     total: number;
     unitValue: number;
     color: string;
 }
 
 const Dashboard: React.FC = () => {
-
+    const {signOut} = useAuth();
+    const navigator = useNavigate();
     const [operations, setOperations] = useState<IOperations[]>([]);
     const [startDate, setStartDate] = useState(() => {
         let dateStorage = localStorage.getItem("@minha-carteira:startDate");
@@ -67,9 +69,17 @@ const Dashboard: React.FC = () => {
     const fetchOperations = useCallback(async () => {
         const formatStartDate = format(startDate, "yyyy-MM-dd");
         const formatEndDate = format(endDate, "yyyy-MM-dd");
-        const operations: IOperations[] = await fetchGetData(`/operation?operationType=SELL&operationType=BUY&startDate=${formatStartDate}&endDate=${formatEndDate}`);
-        setOperations(operations);
-    }, [startDate, endDate]);
+        try {
+            const operations: IOperations[] = await fetchGetData(`/operation?operationType=SELL&operationType=BUY&startDate=${formatStartDate}&endDate=${formatEndDate}`);
+            setOperations(operations);
+        } catch (error: any) {
+            if (error.status === 401) {
+                signOut();
+                navigator('/');
+            }
+        }
+
+    }, [startDate, endDate, navigator, signOut]);
 
     useEffect(() => {
         fetchOperations();

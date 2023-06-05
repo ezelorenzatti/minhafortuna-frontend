@@ -23,7 +23,7 @@ interface IHistoryBoxProps {
 const Content: React.FC<IHistoryBoxProps> = ({data, lineColorAmountEntry, lineColorAmountOutput}) => {
     return (<Container>
         <ChartHeader>
-            <h2>Histórico de Operações</h2>
+            <h2>Histórico de Movimentações</h2>
             <LegendContainer>
                 <Legend color={lineColorAmountEntry}>
                     <div></div>

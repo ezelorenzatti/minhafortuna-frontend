@@ -28,7 +28,7 @@ interface IHistoryFinanceCardProps {
     total: string;
     lastValue: string;
     lastValueDate: string;
-    plataformName: string;
+    exchangeName: string;
     unitValue: string;
     deleteMessage: string;
 
@@ -48,7 +48,7 @@ const HistoryFinanceCard: React.FC<IHistoryFinanceCardProps> = (
         total,
         lastValue,
         lastValueDate,
-        plataformName,
+        exchangeName,
         unitValue,
         operationType,
         deleteMessage,
@@ -63,11 +63,11 @@ const HistoryFinanceCard: React.FC<IHistoryFinanceCardProps> = (
             <CurrencyContainer>
                 <Tag color={tagColor}/>
                 <CurrencyInfo>
-                    <span title="Plataforma e Moeda ou Ativo">{plataformName} - {currencyName}</span>
+                    <span title="Plataforma e Moeda ou Ativo">{exchangeName} - {currencyName}</span>
                     <small title="Data da operação">{subtitle}</small>
                 </CurrencyInfo>
                 <CurrencyActualValue>
-                    <h6>{operationType === 'BUY' ? `Última cotação - ${lastValueDate}` : ''} </h6>
+                    <h6>{lastValueDate && operationType === 'BUY' ? `Última cotação - ${lastValueDate}` : ''} </h6>
                     <h4>{operationType === 'BUY' ? ` ${lastValue}` : ''}</h4>
                 </CurrencyActualValue>
                 <CurrencyAmount>

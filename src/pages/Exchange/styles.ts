@@ -1,24 +1,55 @@
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
-import 'react-datepicker/dist/react-datepicker.css';
 
 export const Container = styled.div`
-
+  height: 100vh - 72px;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  
+  background-color: ${props => props.theme.colors.primary};
+  overflow-x: hidden;
+  overflow-y: hidden;
 `;
 
-export const Content = styled.main`
+export const Form = styled.form`
+  width: 500px;
+  
+  padding: 30px;
+  border-radius: 10px;
 
+  background-color: ${props => props.theme.colors.tertiary};
 `;
-export const AddOperation = styled.div`
-  margin-top: 16px;
-  width: 200px;
+
+export const FormTitle = styled.h1`
+  margin-bottom: 35px;
+  color: ${props => props.theme.colors.white};
+  
+  &:after {
+    content: '';
+    display: block;
+    width: 55px;
+    border-bottom: 10px solid ${props => props.theme.colors.warning};
+  }
+`;
+
+export const ErrorMessage = styled.div`
+  margin-top: 20px;
+  width: 500px;
+  border-radius: 5px;
+  background-color: #ffcccc;
+  color: #ff0000;
+  padding: 10px;
+  margin-bottom: 10px;
 `;
 
 export const DateSelect = styled.div`
-  padding-right: 10px;
-
+  width: 100%;
+  padding-bottom: 5px;
 `;
-export const Label = styled.label`
+export const FormItem = styled.label`
   width: 100px;
   font-size: 20px;
   vertical-align: center;
@@ -26,11 +57,13 @@ export const Label = styled.label`
 `;
 
 export const CustomDatePicker = styled(DatePicker)`
+  width: 100%;
   border-radius: 5px;
   font-family: Arial, sans-serif;
   font-size: 14px;
   color: #333;
-  padding: 10px;
+  padding: 12px;
+  margin-right: 10px;
 
   .react-datepicker-wrapper {
     display: inline-block;
@@ -67,14 +100,4 @@ export const CustomDatePicker = styled(DatePicker)`
   .react-datepicker__day--keyboard-selected {
     background-color: rgba(0, 0, 0, 0.1);
   }
-`;
-
-export const PeriodFilter = styled.div`
-  background-color: ${props => props.theme.colors.tertiary};
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 15px;
-  margin-right: 10px;
-  border-radius: 8px;
 `;

@@ -12,7 +12,7 @@ interface IAuthContext {
 
     token: string;
 
-    signIn(email: string, password: string): void;
+    signIn(email: string, password: string, simulatedData?: boolean): void;
 
     signUp(name: string, email: string, password: string, confirmPassword: string): void
 
@@ -22,41 +22,42 @@ interface IAuthContext {
 
 const AuthContext = createContext<IAuthContext>({} as IAuthContext);
 
-const messageError: any = {Unauthorized: "Não Autorizado"};
-
 const AuthProvider: React.FC<Props> = ({children}) => {
 
     const [loggedUser, setLoggedUser] = useState<string>(
         () => {
-            const loggedUser = localStorage.getItem('@minha-carteira:loggedUser') || '';
+            const loggedUser = sessionStorage.getItem('@minha-carteira:loggedUser') || '';
             return loggedUser;
         }
     );
     const [logged, setLogged]
         = useState<boolean>(() => {
-        const isLogged = localStorage.getItem('@minha-carteira:logged');
+        const isLogged = sessionStorage.getItem('@minha-carteira:logged');
         return !!isLogged;
     });
     const [token, setToken]
         = useState<string>(() => {
-        const token = localStorage.getItem('@minha-carteira:token') || '';
+        const token = sessionStorage.getItem('@minha-carteira:token') || '';
         return token;
     });
 
-    const signIn = async (email: string, password: string) => {
+    const signIn = async (email: string, password: string, simulateData?: boolean) => {
         try {
-            const response = await fetchPostData("/auth/signin", {email: email, password: password})
+            const response = await fetchPostData("/auth/signin", {
+                email: email,
+                password: password,
+                simulateData: simulateData
+            })
             const token = response.token;
             const loggedUser = JSON.parse(atob(token.split('.')[1])).name;
-            localStorage.setItem('@minha-carteira:token', token);
-            localStorage.setItem('@minha-carteira:logged', 'true');
-            localStorage.setItem('@minha-carteira:loggedUser', loggedUser);
+            sessionStorage.setItem('@minha-carteira:token', token);
+            sessionStorage.setItem('@minha-carteira:logged', 'true');
+            sessionStorage.setItem('@minha-carteira:loggedUser', loggedUser);
             setToken(token);
             setLogged(true);
             setLoggedUser(loggedUser);
         } catch (error: any) {
-            const message = messageError[error.response.data.error] || error.response.data.error;
-            throw message;
+            throw error;
         }
     }
 
@@ -70,22 +71,19 @@ const AuthProvider: React.FC<Props> = ({children}) => {
             })
             const token = response.token;
             const loggedUser = JSON.parse(atob(token.split('.')[1])).name;
-            localStorage.setItem('@minha-carteira:token', token);
-            localStorage.setItem('@minha-carteira:logged', 'true');
-            localStorage.setItem('@minha-carteira:loggedUser', loggedUser);
+            sessionStorage.setItem('@minha-carteira:token', token);
+            sessionStorage.setItem('@minha-carteira:loggedUser', loggedUser);
             setToken(token);
-            setLogged(true);
             setLoggedUser(loggedUser);
         } catch (error: any) {
-            const message = messageError[error.response.data.error] || error.response.data.error;
-            throw message;
+            throw error;
         }
     }
 
     const signOut = () => {
-        localStorage.removeItem('@minha-carteira:logged');
-        localStorage.removeItem('@minha-carteira:token');
-        localStorage.removeItem('@minha-carteira:loggedUser');
+        sessionStorage.removeItem('@minha-carteira:logged');
+        sessionStorage.removeItem('@minha-carteira:token');
+        sessionStorage.removeItem('@minha-carteira:loggedUser');
         setToken('');
         setLogged(false)
         setLoggedUser('');

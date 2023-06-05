@@ -5,9 +5,11 @@ import {
     MdArrowDownward,
     MdArrowUpward,
     MdClose,
+    MdCurrencyExchange,
     MdDashboard,
     MdExitToApp,
     MdMenu,
+    MdMonetizationOn,
     MdVerifiedUser,
 } from 'react-icons/md';
 
@@ -76,6 +78,14 @@ const Aside: React.FC = () => {
             <MenuItemLink href="/list/sell">
                 <MdArrowUpward/>
                 Vendas
+            </MenuItemLink>
+            <MenuItemLink href="/exchange">
+                <MdCurrencyExchange/>
+                Exchanges
+            </MenuItemLink>
+            <MenuItemLink href="/currency">
+                <MdMonetizationOn/>
+                Moedas
             </MenuItemLink>
             <MenuItemLink href="/profile">
                 <MdVerifiedUser/>

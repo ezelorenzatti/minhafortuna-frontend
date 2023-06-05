@@ -5,6 +5,7 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import {fetchGetData, fetchPostData} from "../../services/api/api";
 import {useNavigate, useParams} from "react-router-dom";
+import {useAuth} from "../../hooks/auth";
 
 interface ICurrency {
     code: string;
@@ -13,6 +14,7 @@ interface ICurrency {
 }
 
 const Currency: React.FC = () => {
+    const {signOut} = useAuth();
     const navigator = useNavigate();
     const {id} = useParams();
 
@@ -31,8 +33,12 @@ const Currency: React.FC = () => {
                 color: color,
             });
             navigator(-1);
-        } catch (message: any) {
-            setError(message);
+        } catch (error: any) {
+            if (error.status === 401) {
+                signOut();
+                navigator('/');
+            }
+            setError(error.message);
         }
     }
 

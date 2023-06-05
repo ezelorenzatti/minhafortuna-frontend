@@ -17,6 +17,7 @@ import {useNavigate, useParams} from "react-router-dom";
 import SelectInput from "../../components/SelectInput";
 import {dateToString, stringToDate} from "../../utils/formatDate";
 import formatCurrency from "../../utils/formatCurrency";
+import {useAuth} from "../../hooks/auth";
 
 interface IOperation {
     id: number;
@@ -43,6 +44,7 @@ interface IExchange {
 }
 
 const Operation: React.FC = () => {
+    const {signOut} = useAuth();
     const navigator = useNavigate();
     const {type: movimentType, id} = useParams();
 
@@ -124,24 +126,32 @@ const Operation: React.FC = () => {
     }
 
     async function fetchOperation({id}: { id: any }) {
-        const currencies: ICurrency[] = await fetchGetData("/currency");
-        setCurrrencies(currencies);
+        try {
+            const currencies: ICurrency[] = await fetchGetData("/currency");
+            setCurrrencies(currencies);
 
-        const exchanges: IExchange[] = await fetchGetData("/exchange");
-        setExchanges(exchanges);
+            const exchanges: IExchange[] = await fetchGetData("/exchange");
+            setExchanges(exchanges);
 
-        if (id) {
-            const operation: IOperation = await fetchGetData("/operation/" + id);
-            setIdOperation(operation.id);
-            setDate(stringToDate(operation.date));
-            setAmount(String(operation.amount));
-            setOperationType(operation.operationType)
-            setCurrencyCode(operation.currencyCode);
-            setExchangeId(String(operation.exchangeId));
-            setUnitValue(String(operation.unitValue));
-            setTotal(String(operation.total));
-            setTotalFormated(formatCurrency(operation.total));
+            if (id) {
+                const operation: IOperation = await fetchGetData("/operation/" + id);
+                setIdOperation(operation.id);
+                setDate(stringToDate(operation.date));
+                setAmount(String(operation.amount));
+                setOperationType(operation.operationType)
+                setCurrencyCode(operation.currencyCode);
+                setExchangeId(String(operation.exchangeId));
+                setUnitValue(String(operation.unitValue));
+                setTotal(String(operation.total));
+                setTotalFormated(formatCurrency(operation.total));
+            }
+        } catch (error: any) {
+            if (error.status === 401) {
+                signOut();
+                navigator('/')
+            }
         }
+
     }
 
     useEffect(() => {

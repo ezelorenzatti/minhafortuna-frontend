@@ -5,6 +5,7 @@ import Input from "../../components/Input";
 import Button from "../../components/Button";
 import {fetchGetData, fetchPostData} from "../../services/api/api";
 import {useNavigate} from "react-router-dom";
+import {useAuth} from "../../hooks/auth";
 
 interface IUserProfile {
     id: string;
@@ -16,6 +17,7 @@ interface IUserProfile {
 }
 
 const UserProfile: React.FC = () => {
+    const {signOut} = useAuth();
     const navigator = useNavigate();
     const [id, setId] = useState<string>('');
     const [name, setName] = useState<string>('');
@@ -50,11 +52,18 @@ const UserProfile: React.FC = () => {
     }
 
     async function fetchProfile() {
-        const profile: IUserProfile = await fetchGetData("/user/profile");
-        setId(profile.id);
-        setName(profile.name);
-        setPhone(profile.phone);
-        setEmail(profile.email);
+        try {
+            const profile: IUserProfile = await fetchGetData("/user/profile");
+            setId(profile.id);
+            setName(profile.name);
+            setPhone(profile.phone);
+            setEmail(profile.email);
+        } catch (error: any) {
+            if (error.status === 401) {
+                signOut();
+                navigator('/')
+            }
+        }
     }
 
     useEffect(() => {

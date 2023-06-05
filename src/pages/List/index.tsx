@@ -10,6 +10,7 @@ import {format} from "date-fns";
 import {fetchGetData, fetchPostData} from "../../services/api/api";
 import Button from "../../components/Button";
 import {PeriodLabel, PeriodSelector} from "../Dashboard/styles";
+import {useAuth} from "../../hooks/auth";
 
 interface IOperation {
     id: number;
@@ -32,6 +33,7 @@ interface IOperation {
 }
 
 const List: React.FC = () => {
+    const {signOut} = useAuth();
     const navigator = useNavigate();
     const [operations, setOperations] = useState<IOperation[]>([]);
     const [startDate, setStartDate] = useState(() => {
@@ -70,8 +72,15 @@ const List: React.FC = () => {
         const operationType = (movimentType || '').toUpperCase();
         const formatStartDate = format(startDate, "yyyy-MM-dd");
         const formatEndDate = format(endDate, "yyyy-MM-dd");
-        const fetchedOperations: IOperation[] = await fetchGetData(`/operation?operationType=${operationType}&startDate=${formatStartDate}&endDate=${formatEndDate}`);
-        setOperations(fetchedOperations);
+        try {
+            const fetchedOperations: IOperation[] = await fetchGetData(`/operation?operationType=${operationType}&startDate=${formatStartDate}&endDate=${formatEndDate}`);
+            setOperations(fetchedOperations);
+        } catch (error: any) {
+            if (error.status === 401) {
+                signOut();
+                navigator('/')
+            }
+        }
     }, [movimentType, startDate, endDate]);
 
     const handleDeleteOperation = async (id: number) => {

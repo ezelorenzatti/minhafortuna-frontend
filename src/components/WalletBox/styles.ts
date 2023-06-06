@@ -57,6 +57,7 @@ export const Container = styled.div<IContainerProps>`
   animation: ${animate} .5s;
 
   @media (max-width: 770px) {
+    width: 48%;
     > span {
       font-size: 14px;
     }

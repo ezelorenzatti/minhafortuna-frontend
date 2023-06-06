@@ -12,7 +12,8 @@ export const Content = styled.div`
 `;
 
 export const DateSelect = styled.div`
-
+  width: 100%;
+  padding-bottom: 15px;
 `;
 export const Label = styled.label`
   width: 100px;
@@ -73,6 +74,10 @@ export const PeriodFilter = styled.div`
   padding: 15px;
   margin-right: 10px;
   border-radius: 8px;
+
+  @media (max-width: 770px){
+    width: 100%;
+  }
 `;
 
 export const PeriodLabel = styled.h4`
@@ -84,6 +89,10 @@ export const PeriodLabel = styled.h4`
 
 export const PeriodSelector = styled.div`
   display: flex;
+
+  @media (max-width: 770px){
+    flex-direction: column;
+  }
 `;
 
 

@@ -54,6 +54,9 @@ export const CurrencyContainer = styled.li`
     font-size: 18px;
   }
 
+  @media(max-width: 800px){
+    flex-direction: column;
+  }
 
 `;
 
@@ -73,23 +76,54 @@ export const CurrencyInfo = styled.div`
   > small {
     font-size: 15px;
   }
+
+  @media(max-width: 800px){
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
 `;
 export const CurrencyActualValue = styled.div`
   text-align: right;
+
+  @media(max-width: 800px){
+    padding-bottom: 10px;
+  }
 `;
 export const CurrencyAmount = styled.div`
   text-align: right;
+
+  @media(max-width: 800px){
+    padding-bottom: 10px;
+  }
 `;
 export const CurrencyUnityValue = styled.div`
   text-align: right;
+
+  @media(max-width: 800px){
+    padding-bottom: 10px;
+  }
 `;
 export const CurrencyTotalValue = styled.div`
   text-align: right;
+
+  @media(max-width: 800px){
+    padding-bottom: 10px;
+  }
 `;
 
 export const ActionMenu = styled.div`
   display: flex;
   flex-direction: row;
+
+  @media(max-width: 800px){
+    width: 90px;
+    position: absolute;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+  }
 `;
 export const ActionButton = styled.div`
 

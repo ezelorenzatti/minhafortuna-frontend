@@ -13,8 +13,11 @@ export const Container = styled.div`
   @media(max-width: 320px){
       flex-direction: column;
   }
-  
-  
+
+  @media(max-width: 800px){
+    flex-direction: column;
+  }
+
 `;
 
 export const TitleContainer = styled.div<ITitleContainerProps>`
@@ -49,7 +52,7 @@ export const TitleContainer = styled.div<ITitleContainerProps>`
 export const Controllers = styled.div`
   display: flex;
 
-  @media(max-width: 320px){
+  @media(max-width: 1000px){
     width: 100%;
     justify-content: space-around;
     margin-top: 20px;

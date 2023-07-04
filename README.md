@@ -12,4 +12,4 @@ yarn start
 a url de acesso é http://localhost:3000
 
 esse projeto funciona em paralelo ao backend localizado em
-https://bitbucket.org/ezequiellorenzatti/minhafortuna-backend
+https://github.com/ezelorenzatti/minhafortuna-backend
